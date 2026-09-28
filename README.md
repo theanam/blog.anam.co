@@ -20,9 +20,17 @@ Actions tab.
 with an Actions deploy, GitHub ignores the repo's `CNAME` file. DNS is on Cloudflare: `anam.co`
 has A records for GitHub Pages (185.199.108–111.153), DNS-only until GitHub issues the certificate.
 
-`blog.anam.co` is the old Ghost address, and every old post link points there. It gets a CNAME
-later; to keep those links working it needs a Cloudflare redirect rule
-`blog.anam.co/* → https://anam.co/$1` (301), because a Pages site serves only one custom domain.
+`blog.anam.co` is the old Ghost address, and every old post link points there. It redirects to
+`anam.co` at Cloudflare; GitHub never sees it (a Pages site gets a certificate for only one domain,
+which is why pointing `blog.anam.co` at GitHub gives an SSL error). Set up in Cloudflare:
+
+1. DNS: `AAAA blog 100::`, **proxied** (orange cloud). `100::` is a placeholder for redirect-only hosts.
+2. Redirect rule, first: hostname `blog.anam.co` and path `/rss/` → static `https://anam.co/feed.xml`, 301.
+   This keeps existing RSS subscribers working.
+3. Redirect rule: hostname `blog.anam.co` → dynamic `concat("https://anam.co", http.request.uri.path)`,
+   301, preserve query string.
+
+Check with `curl -sI https://blog.anam.co/docker-in-bangla/ | grep -i location`.
 
 ## Theme
 
