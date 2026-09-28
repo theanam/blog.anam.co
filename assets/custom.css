@@ -13,3 +13,48 @@ body, .post-full-content h1, .post-full-content h2, .post-full-content h3,
 
 /* Long code lines scroll instead of breaking the layout. */
 .post-full-content pre { overflow-x: auto; }
+
+/* Pagination. Casper has none (it uses infinite scroll), so this borrows its
+   .author-card-button look: grey pill that turns blue on hover. */
+.pagination-outer { padding-bottom: 6vw; }
+.pagination {
+    /* Three equal outer columns keep the page number centred whatever the buttons' widths. */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    padding-top: 2vw;
+}
+.pagination .newer-posts { justify-self: start; }
+.pagination .older-posts { justify-self: end; }
+.pagination a {
+    display: block;
+    padding: 12px 20px;
+    border: 1px solid #aebbc1;
+    border-radius: 20px;
+    color: #738a94;
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.pagination a:hover {
+    border-color: #3eb0ef;
+    color: #3eb0ef;
+    text-decoration: none;
+}
+.pagination .page-number {
+    color: #738a94;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+@media (max-width: 500px) {
+    .pagination-word { display: none; }
+    .pagination a { padding: 10px 14px; font-size: 1.2rem; }
+    .pagination .page-number { font-size: 1.2rem; }
+}

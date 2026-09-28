@@ -12,7 +12,17 @@ Migrated from Ghost 2.28 on 2026-09-28. Every URL the Ghost site served still re
 
 `.github/workflows/deploy.yml` runs `jekyll build` and publishes `_site/` to GitHub Pages on every
 push to `main`, once a day (so future-dated posts appear on their date), and on demand from the
-Actions tab. `CNAME` sets the custom domain to blog.anam.co.
+Actions tab.
+
+### Domain
+
+**`anam.co` is the blog's domain.** Set it in GitHub under Settings → Pages → Custom domain;
+with an Actions deploy, GitHub ignores the repo's `CNAME` file. DNS is on Cloudflare: `anam.co`
+has A records for GitHub Pages (185.199.108–111.153), DNS-only until GitHub issues the certificate.
+
+`blog.anam.co` is the old Ghost address, and every old post link points there. It gets a CNAME
+later; to keep those links working it needs a Cloudflare redirect rule
+`blog.anam.co/* → https://anam.co/$1` (301), because a Pages site serves only one custom domain.
 
 ## Theme
 

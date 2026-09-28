@@ -1,6 +1,6 @@
 title: "Anam's Blog"
 description: "Useless/Useful thoughts and ideas"
-url: "https://blog.anam.co"
+url: "https://anam.co"
 baseurl: "/"  # jasper2 templates expect a trailing slash
 lang: en
 timezone: Asia/Dhaka
@@ -10,6 +10,8 @@ favicon: /content/images/2018/06/blogfav-1.png
 # cover: /content/images/blog-cover.jpg
 facebook: theanam
 words_per_minute: 200
+# GA4. Only loaded when JEKYLL_ENV=production (the GitHub Actions build), not in local previews.
+google_analytics: G-NSMGP3XJ80
 author:
   name: Anam Ahmed
   slug: anam

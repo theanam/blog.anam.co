@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{ '/assets/custom.css' | relative_url }}" />
     {% feed_meta %}
     {% seo title=false %}
+    {% include analytics.html %}
 </head>
 <body class="{% if paginator.page > 1 %}paged archive-template{% elsif page.class %}{{ page.class }}{% if page.class == 'post-template' %}{% for t in page.tags %} tag-{{ t }}{% endfor %}{% endif %}{% else %}home-template{% endif %}">
     <div class="site-wrapper">

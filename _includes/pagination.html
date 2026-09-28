@@ -1,14 +1,18 @@
 {% comment %} Ghost-style links: base/ for page 1, base/page/N/ otherwise. {% endcomment %}
 {% if include.total > 1 %}
+<div class="outer pagination-outer"><div class="inner">
 <nav class="pagination" role="navigation">
+    {% if include.page == 1 %}<span class="pagination-spacer"></span>{% endif %}
     {% if include.page > 1 %}
         {% assign prev = include.page | minus: 1 %}
-        <a class="newer-posts" href="{% if prev == 1 %}{{ include.base | relative_url }}{% else %}{{ include.base | append: 'page/' | append: prev | append: '/' | relative_url }}{% endif %}">&larr; Newer Posts</a>
+        <a class="newer-posts" href="{% if prev == 1 %}{{ include.base | relative_url }}{% else %}{{ include.base | append: 'page/' | append: prev | append: '/' | relative_url }}{% endif %}">&larr; Newer<span class="pagination-word"> Posts</span></a>
     {% endif %}
     <span class="page-number">Page {{ include.page }} of {{ include.total }}</span>
     {% if include.page < include.total %}
         {% assign next = include.page | plus: 1 %}
-        <a class="older-posts" href="{{ include.base | append: 'page/' | append: next | append: '/' | relative_url }}">Older Posts &rarr;</a>
+        <a class="older-posts" href="{{ include.base | append: 'page/' | append: next | append: '/' | relative_url }}">Older<span class="pagination-word"> Posts</span> &rarr;</a>
+    {% else %}<span class="pagination-spacer"></span>
     {% endif %}
 </nav>
+</div></div>
 {% endif %}
