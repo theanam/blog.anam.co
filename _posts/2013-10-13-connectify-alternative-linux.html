@@ -1,0 +1,68 @@
+---
+title: "Connectify Alternative for linux"
+date: 2013-10-13 09:03:00 +0000
+permalink: /connectify-alternative-linux/
+slug: "connectify-alternative-linux"
+ghost_id: "5b81ac0fc23e4b0001dae89c"
+tags: ["linux", "hotspot", "english"]
+excerpt: "This article is very old and the method is not recommended any more. Connectify-me has been so popular among the Windows users. It allows you to create Wireless hotsopt and share your internet"
+image: "https://images.unsplash.com/photo-1495791153954-705fa8c56eec?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=1b53064f61d5802d2c7be600444d83e7"
+last_modified_at: 2018-11-28 05:10:57 +0000
+redirect_from:
+  - /connectify-alternative-linux/amp/
+render_with_liquid: false
+---
+<blockquote>
+<p>This article is very old and the method is not recommended any more.</p>
+</blockquote>
+<p><a href="http://connectify.me">Connectify-me</a> has been so popular among the Windows users. It allows you to create Wireless hotsopt and share your internet connection.  That's amazing because, now a days portable devices are easily available and most of them are wi-fi capable. Unfortulately, there is nothing completely baked for doing the same thing. However it is not that hard to do it on linux. in fact, it is even easier. So let's get started.</p>
+<p>We'll have to install these packages :</p>
+<pre><code>    hostapd, dhcp3-server
+</code></pre>
+<p>to install them, type these command in debian based distributions (Debian, Ubuntu, Mint, Zorin, Knoppix)</p>
+<pre><code>    sudo apt-get install hostapd dhcp3-server
+</code></pre>
+<p>In arch , type these commands:</p>
+<pre><code>    sudo pacman -Sy hostapd
+    sudo pacman -Sy dhcp
+</code></pre>
+<p>This script also depends on <strong>python 2.7</strong> which comes <em>preinstalled</em> in most cases. if you Don't have python by default, install it with your package manager.</p>
+<p><strong>Step 2</strong></p>
+<p>Download the <a href="https://github.com/nims11/hostapd.py/archive/master.zip">Zip file</a> attached with this post. and extract it in your home folder.</p>
+<p>you will have a folder named <strong>hostapd-python-script</strong> in your home folder.</p>
+<p>open up terminal, go to the directory by typing :</p>
+<pre><code>    cd hostapd-python-script
+</code></pre>
+<p>type <code>ifconfig</code> to list all your network interfaces, and then identify the device that's providing you internet. (You'll find a inet-address) associated with it. Mine looks something like this:</p>
+<pre><code>       eth1      Link encap:Ethernet  HWaddr xx:xx:xx:xx:xx:xx  
+                  inet addr:192.168.1.2  Bcast:192.168.1.255  Mask:255.255.255.0
+                  inet6 addr: fe80::cad1:5eff:fe42:ab86/64 Scope:Link
+                  UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+                  RX packets:66807 errors:0 dropped:0 overruns:0 frame:0
+                  TX packets:56193 errors:0 dropped:0 overruns:0 carrier:0
+                  collisions:0 txqueuelen:1000 
+                  RX bytes:66738188 (66.7 MB)  TX bytes:7257406 (7.2 MB)
+</code></pre>
+<p>So, My <strong>eth1</strong> [ethernet adapter] is providing me internet. in your case, it can be <em>eth0</em> or any other device. take a note of the device name.</p>
+<p>now run this command in the terminal(after reading the text below this command):</p>
+<pre><code>    sed -i 's/eth0/eth1/' config.py &gt;&gt;newconfig.py &amp;&amp; rm config.py &amp;&amp; mv newconfig.py config.py
+</code></pre>
+<p>Looks confusing? well it does nothing but replaces all <em>eth0</em> with <em>eth1</em> in <code>config.py</code> . you can do it manually as well. and <strong>Be careful dude</strong> the above command may be different for you. My device is <em>eth1</em> , if your device is eth0, then leave it as is and don't run the command. and if it is something else, then change the command. You'll have to change the starting part, i mean the <code>sed 's/eth0/eth1/'</code> part. just replace <strong>eth1</strong> (the replace string) with your device name and then run the whole command.</p>
+<p>phew!! tired? a few steps left. I promise.</p>
+<p>now change the permisson of the file <code>hostapd.py</code> and make it executable by running this command</p>
+<pre><code>    chmod +x hostapd.py
+</code></pre>
+<p>this script requires superuser permisson, so start your own hotspot by typing (make sure your wi-fi is on and not connected to anything):</p>
+<pre><code>    sudo ./hostapd.py start
+</code></pre>
+<p>If everything goes well, you'll see a wi-fi network with your phone titled <strong>test</strong> the default security key is <strong>foobar123</strong> .</p>
+<p>however you can change the name and the key in the file <code>config.py</code></p>
+<p>to stop the server, type :</p>
+<pre><code>    sudo ./hostapd.py stop
+</code></pre>
+<h3 id="happysharing">Happy sharing :)</h3>
+<p>the script is written by <a href="http://nims11.wordpress.com/">Nimesh Ghelani</a> . Check out the original Github repo <a href="https://github.com/nims11/hostapd-python-script">here</a> and find him on <a href="https://github.com/nims11">Github</a>.</p>
+<p><strong>feel free to add comment, if you get stuck or if you find it useful</strong></p>
+<p><strong>Troubleshooting</strong></p>
+<p>coming soon..</p>
+

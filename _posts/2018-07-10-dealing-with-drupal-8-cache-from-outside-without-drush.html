@@ -1,0 +1,32 @@
+---
+title: "Dealing with Drupal 8 Cache from outside (Without Drush)"
+date: 2018-07-10 11:56:58 +0000
+permalink: /dealing-with-drupal-8-cache-from-outside-without-drush/
+slug: "dealing-with-drupal-8-cache-from-outside-without-drush"
+ghost_id: "5b81ac0fc23e4b0001dae8ad"
+tags: ["docker", "drupal", "drupal8", "cache", "development", "english"]
+excerpt: "If you have developed theme for Drupal, You know about the cache issue. In many situations, the easiest (and quickest) solution for cache is to use Drush . As convenient as as it"
+image: "https://images.unsplash.com/photo-1493953659556-556b14bdaca8?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=e26f2876b6687e9ea047a840c374c7a1"
+last_modified_at: 2018-11-28 05:08:54 +0000
+redirect_from:
+  - /dealing-with-drupal-8-cache-from-outside-without-drush/amp/
+render_with_liquid: false
+---
+<p>If you have developed theme for Drupal, You know about the cache issue. In many situations, the easiest (and quickest) solution for cache is to use <a href="https://www.drush.org/">Drush</a>. As convenient as as it sounds, There might be situations when you may not have enough privilege to use in in your Drupal project. For example if you ever have to work live in a Shared hosting. Or like me: I tried to make a drupal Development environment on top of docker, and I wanted to keep the container as close to base image as possible.So I chose not to create another Dockerfile and used the base image to create my container. </p><blockquote>You can read about it in my Previous blog post: <a href="https://blog.anam.co/easier-drupal-development-with-docker/">Easier Drupal Development with Docker</a></blockquote><p>You can clear cache from the Drupal admin panel. It's under <code>Configuration&gt;Development&gt;Performance</code> and that would do. But we are developers! and we like to spend an hour writing a script to automate a five minute task.well, I did it for you so that you save your precious five minutes. </p><figure class="kg-image-card"><img src="/content/images/2018/07/Screen-Shot-2018-07-10-at-5.26.33-PM.png" class="kg-image"><figcaption>Clearing Cache from UI (Not what we are planning to do here)</figcaption></figure><p>There's another way. In order to do it, you need certain access. Here's a list:</p><ol><li>You need to be able to edit the file <code>settings.php</code> under <code>sites/default</code> or for multisite : <code>sites/&lt;sitename&gt;</code></li><li>You need to have enough shell access to run a shell script.</li></ol><p>Let's start by editing the Settings file. Open the settings file, and add this line at the very end:</p><pre><code>//Enable Rebuild Access:
+$settings['rebuild_access'] = TRUE;</code></pre><blockquote>Make sure to comment out/Remove this line after the development is done. Otherwise it might compromise security.</blockquote><p>Then SSH into the server (In my case I opened an interactive shell with <code>docker exec</code> inside my container), navigate to the Drupal app folder and then go to the folder: <code>core/scripts</code> , there's a file named: <code>rebuild_token_calculator.sh</code> , if you run the script, it will generate some output like this:</p><pre><code>timestamp:&lt;timestamp&gt;token:&lt;token&gt;</code></pre><p>We are interested in the token part, so, we will copy it and save it somewhere. Now you can use this token to rebuild cache. You just need to make a GET request:</p><pre><code>GET &lt;drupal-site-url&gt;/rebuild.php?token=&lt;token&gt;</code></pre><p>If you are working in a shared hosting, You can just create new Request in tool like <a href="https://www.getpostman.com/">Postman</a> and make a request every time you need the cache cleared.</p><p>But in my case, I can actually track the file changes. So, I would like to automate it too. I started by creating a new <code>package.json</code> by running <code>npm init</code>, as the script will be a nodeJS script. </p><p>then I installed three dependencies:</p><pre><code>npm install --save request request-promise fsmonitor</code></pre><p>I created a file called <code>themedev.js</code> and added the following content:</p><pre><code>const fsm         = require('fsmonitor');
+const rp          = require('request-promise');
+const watchFolder = "./themes";
+const token       = "&lt;token&gt;";
+
+fsm.watch(watchFolder,null,function(){
+    console.log("Start rebuild cache...");
+    rp(`http://localhost:8090/rebuild.php?token=${token}`)
+    .then(function(success) {
+        console.log("Cache Rebuilt Successfully...");
+        //console.log(success);
+      }, function(error) {
+        console.log("Cache rebuild failed...");
+      });
+});
+
+console.log(`Watching file on folder:${watchFolder}`);</code></pre><p>The file requires node version 10 to run .Here I created a simple folder watcher, that watches for change in the folder ./themes and once it gets a change, it makes a HTTP GET request to the URL : <code>localhost:8090/rebuild.php?token=&lt;token&gt;</code> and if the HTTP request is successful, prints out "Cache rebuild successfully..." in the console.</p><p>Now whenever I need to edit the theme in the project, all I need to do is: start this script with nodeJS: </p><pre><code>node themedev.js</code></pre><blockquote>There might be other "Good practices" of doing the same thing with elegance. But being a person who doesn't have a lot of experience in the field of Drupal, This is the best I could come up with.</blockquote>

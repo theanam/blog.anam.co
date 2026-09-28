@@ -1,0 +1,40 @@
+---
+title: "সি এস এস এর নতুন কিছু ইউনিট rem, em, vw vh আর calc() ফাংশন পরিচিতি"
+date: 2015-11-25 00:17:00 +0000
+permalink: /css-rem-em-vw-vh-calc/
+slug: "css-rem-em-vw-vh-calc"
+ghost_id: "5b81ac0fc23e4b0001dae8a4"
+tags: ["css", "unit", "responsive", "web-design", "bangla", "bangla-2"]
+excerpt: "রেস্পন্সিভ ওয়েব এখনকার খুব কমন একটা চাহিদা । কোন একটা অদ্ভুত কারনে রেস্পন্সিভ ওয়েব ব্যপারটা যতটা সহজ হওয়ার কথা ততটা সহজ নয়। সবারই রেস্পন্সিভ ওয়েব ডিজাইন করার ব্যপারে আলাদা আলাদা স্টাইল আছে। আজকে"
+image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=77546dbfa09c42bd14d26ef016226131"
+last_modified_at: 2018-07-17 11:00:11 +0000
+redirect_from:
+  - /css-rem-em-vw-vh-calc/amp/
+render_with_liquid: false
+---
+<p>রেস্পন্সিভ ওয়েব এখনকার খুব কমন একটা চাহিদা । কোন একটা অদ্ভুত কারনে রেস্পন্সিভ ওয়েব ব্যপারটা যতটা সহজ হওয়ার কথা ততটা সহজ নয়। সবারই রেস্পন্সিভ ওয়েব ডিজাইন করার ব্যপারে আলাদা আলাদা স্টাইল আছে। আজকে রেস্পন্সিভ ডিজাইন নিয়েই লিখবো, তবে হয়ত খুব কম ব্যবহৃত কিছু ইউনিট আর ট্রিক নিয়ে আলোচনা করবো, সবাই সহজ গুলো দিয়ে শুরু করে, আমি কঠিনটা দিয়ে শুরু করি।</p>
+<h2 id="calc">calc() ফাংশন :</h2>
+<p>CSS এ আবার ফাংশন!! মশকরা করেন? হুম ফাংশনই আছে তো। এই যেমন ধরেন <code>linear-gradient, radial-gradient</code> এগুলোকে ফাংশন হিসেবেই বিবেচনা করতে পারেন, তেমনি একটা ফাংশন <code>calc()</code> তো এইটা কি করে? নাম শুনে কি মনে হয়? হুম যেটা মনে হয় সেটাই করে। খুব সহজ ভাষায় বলতে গেলে এই ফাংশনের মধ্যে হিসাব নিকাশ করতে পারবেন। মজার না? আপনি হয়ত ভাবছেন আমি তো less/sass ব্যবহার করি, ঐটাতে তো প্রাচীনকাল থেকে হিসাব নিকাশ করা যায়। হুম কথা সত্য, কিন্তু ব্যপার হচ্ছে, আপনি কি এগুলোতে <strong>%</strong> থেকে <strong>px</strong> বাদ দিয়ে হিসেব করতে পারবেন? নাহ মনেহয়, সেগুলোতে আলাদা ইউনিটের মধ্যে হিসাব করা যায়না। আবার ধরেন আপনি যখন এই আর্টিকেল পড়ছেন, ততদিনে এই ফিচারও চলে আসছে, আমার ধারনা ততদিনে <code>calc()</code> ফাংশনের ব্রাউজার সাপোর্ট অনেক বেশী ভালো হয়ে গেছে।  যাই হোক এটা দিয়ে আপনি <code>+ , - , * , /</code> চারটাই করতে পারবেন। আর এই ফাংশন বেশীভাগ সংখ্যা ভিত্তিক প্রোপার্টির জন্য কাজ করবে।  আর এর সিনট্যক্স কিছুটা এরকম :</p>
+<pre><code>  height:calc(100% - 20px); 
+</code></pre>
+<p>বোঝার সুবিধার জন্য <code>height</code> প্রোপার্টি দিয়ে স্যম্পল দেখিয়েছি, একটা জিনিস খেয়াল করেন, মাইনাস এর আগে পিছে <strong>দুইটা স্পেস</strong> আছে, এই স্পেস গুলো না দিয়ে কোড করার পর কোড কাজ না করলে আমার দোষ নাই। নীচে পুরো একটা উদাহরন দেয়া আছে, <code>calc()</code> ব্যবহার করে একটা <code>div</code> কে পুরোপুরি সেন্টারে আনা হয়েছে।</p>
+<!--calc sample codepen -->
+<p data-height="268" data-theme-id="0" data-slug-hash="ujrAp" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/theanam/pen/ujrAp/'>ujrAp</a> by Anam Ahmed (<a href='http://codepen.io/theanam'>@theanam</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p>calc() এখনকার সব আধুনিক ব্রাউজার সাপোর্ট করে, আরো বিস্তারিত সাপোর্ট ইনফরমেশন পাবেন <a href="http://caniuse.com/calc">caniuse.com</a> এ।</p>
+<h2 id="emrem">em এবং rem:</h2>
+<p>em আর rem এই দুইটা ইউনিট সরাসরি ফন্ট সাইজের সাথে সম্পর্কিত। এবং মজার বিষয় হচ্ছে, দুইটাই আপেক্ষিক ফন্ট সাইজ। em নিয়ে আগে বলি, ধরেন আপনার একটা <code>&lt;div&gt;</code> এর মধ্যে একটা <code>&lt;p&gt;</code> আছে, এখন আপনার div টার font-size যদি আপনি 15px ঠিক করে দেন, তাহলে, আপনি যখন p টার ফন্ট সাইজ ঠিক করতে চাইবেন, তখন তা ‍‍‍‍‍<code>font-size:1em</code> দিলে, আপনার p টারও ফন্ট সাইজ ১৫ পিক্সেল হবে, বলেন তো, 2em দিলে কি হবে? হুম ঠিক ধরেছেন, ৩০ পিক্সেল হবে! 3em, দিলে ৪৫ পিক্সেল। তাইলে বুঝেই গেছেন, em অর্থ প্যরেন্ট এলিমেন্ট এর ফন্ট সাইজের চেয়ে কতটা বড় বা ছোট। তবে এই ইউনিট যে শুধু ফন্ট সাইজের প্রোপার্টিতে কাজ করবে তা কিন্তু নয়, যেখানে px কাজ করে, প্রায় সব যায়গাতেই কাজ করতে, মানে ধরেন আপনি এমনটা যদি লিখেন, <code>height:2em</code> তাহলে কোনই ভুল হবেনা।</p>
+<p>এখন আসি rem নিয়ে, r মানে রুট, আর বাকী সবকিছুই em এর মত, মানে em এ যেমন প্যরেন্ট এলিমেন্টের ফন্ট সাইজের সাথে সম্পর্কিত ছিল, এটা একেবারে রুট এলিমেন্ট মানে <code>&lt;html&gt;</code> এর ফন্ট সাইজের সাথে সম্পর্কিত। একবার শুধু ফন্ট সাইজ ঠিক করে দিয়ে পুরো ডকুমেন্টে আরামে rem ব্যবহার করতে পারবেন, যতবার ইচ্ছা ততবার, কেও মানা করতে আমাকে ডাক দিবেন :p । আর মিডিয়া কুয়েরী দিয়ে স্ক্রিন সাইজ অনুযায়ী কয়েক্টা আলাদা ফন্ট সাইজ সেট করে দিতে পারলেই চমতকার রেসপন্সিভ টাইপোগ্রাফি হয়ে যাবে। নীচের স্যম্পল আপনাদের বুঝতে সাহায্য করবে :</p>
+<!--rem em sample -->
+<p data-height="268" data-theme-id="0" data-slug-hash="pxqGk" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/theanam/pen/pxqGk/'>pxqGk</a> by Anam Ahmed (<a href='http://codepen.io/theanam'>@theanam</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+<script async src="//codepen.io/assets/embed/ei.js"></script>
+<h2 id="vwvh">vw আর vh :</h2>
+<p>v মানে ভিউপোর্ট (মানে ব্রাউজারের যতটুকু অংশে আপনার ওয়েবপেজ দেখা যায়) আর w = width, h = height ওকে, অনেকটাই মনে হয় বুঝাতে পেরেছি তাইনা, আচ্ছা আরো একটু পরিস্কার করে বলি, <code>vw</code> আর <code>vh</code> আপনার ব্রাউজার স্ক্রিনের width আর height, 100vw মানে পুরো ব্রাউজার width আর 100vh মানে পুরো ব্রাউজারের height.নীচের স্যম্পল কোড দেখলে ব্যপারটা আরো পরিস্কার হবে।</p>
+<!-- vw and vh -->
+<p data-height="268" data-theme-id="0" data-slug-hash="nwgxl" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/theanam/pen/nwgxl/'>nwgxl</a> by Anam Ahmed (<a href='http://codepen.io/theanam'>@theanam</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p>একটা বক্সকে পুরোপুরি মাঝখানে আনা হয়েছে, vw আর vh ব্যবহার করে, এবং তা সবসময় উইন্ডো সাইজের অর্ধেক থাকবে।</p>
+<blockquote>
+<p>এই নতুন ইউনিট আর ফাংশনগুলোর ব্রাউজার সাপোর্ট বেশ ভালো হলেও, ফলব্যক দিতে ভুলবেন না। যদি কোন কারনে কাজ না করে, আপনার সাইট যেন যথেষ্ট ভদ্র দেখায় এমন ব্যবস্থা করে রাখুন।</p>
+</blockquote>
+

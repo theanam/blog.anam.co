@@ -1,0 +1,22 @@
+---
+layout: default
+current: home
+class: home-template
+---
+<header class="site-header outer{% unless site.cover %} no-cover{% endunless %}"{% if site.cover %} style="background-image: url({{ site.cover | relative_url }})"{% endif %}>
+    <div class="inner">
+        <div class="site-header-content">
+            <h1 class="site-title"><img class="site-logo" src="{{ site.logo | relative_url }}" alt="{{ site.title }}" /></h1>
+            <h2 class="site-description">{{ site.description }}</h2>
+        </div>
+        {% include site-nav.html %}
+    </div>
+</header>
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <div class="post-feed">
+            {% for post in paginator.posts %}{% include post-card.html post=post %}{% endfor %}
+        </div>
+    </div>
+</main>

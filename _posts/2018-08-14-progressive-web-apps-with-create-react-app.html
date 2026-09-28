@@ -1,0 +1,83 @@
+---
+title: "Progressive web apps with create-react-app. And my experience."
+date: 2018-08-14 18:59:08 +0000
+permalink: /progressive-web-apps-with-create-react-app/
+slug: "progressive-web-apps-with-create-react-app"
+ghost_id: "5b81ac0fc23e4b0001dae8b2"
+tags: ["javascript", "front-end", "react", "pwa", "progressive-web-apps", "english"]
+excerpt: "If you start learning react now (mid 2018), there's a good chance that you'll start with the famous tool create-react-app , the tool became a de-factor standard for creating react application without configuring"
+image: "https://images.unsplash.com/photo-1480694313141-fce5e697ee25?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=16cee079798c8b1aa5098bcb994f7af3"
+last_modified_at: 2020-02-18 09:57:01 +0000
+redirect_from:
+  - /progressive-web-apps-with-create-react-app/amp/
+render_with_liquid: false
+---
+<p>If you start learning react now (mid 2018), there's a good chance that you'll start with the famous tool <code>create-react-app</code> , the tool became a de-factor standard for creating react application without configuring any (or less) tools. I was always skeptical about anything and everything that compiles into JavaScript, but after working for about a couple of years with tools like <a href="https://babeljs.io/">Babel</a>, I started loving some of them.</p><p>I was tasked with creating a <a href="https://developers.google.com/web/progressive-web-apps/">Progressive Web APP</a> at my job. Out CTO is a cool guy, he doesn't care what framework I use or what R&amp;D I put in my work. As long as the delivery meets the timeline, and the application works great, he doesn't have any problem with any technology. With that being said, we all like react in our organisation. So I decided to do it with react and chose to use <code>create-react-app</code>.</p><h3 id="let-s-talk-about-progressive-web-apps-for-a-while-">Let's talk about Progressive Web Apps for a while: </h3><p>Being one of the biggest internet giant, <strong>Google</strong> has a lot of influence on the future of the web. They are good at it too. The way chrome is pushing the web forward is really worth the appreciation. Like google, we will call them <strong>PWA</strong> for the rest of this article. </p><p>Google is very excited about PWA, so am I. Every year, there are lots of discussions about PWA in google IO. You can check their<a href="https://www.youtube.com/user/GoogleDevelopers"> YouTube Channel</a>. for those cool articles. </p><p>In short, PWAs are specially created web application (websites) that can be installed like an application in supported devices (Android, iOS or Chrome OS even supports other chrome platforms as well like Desktop Chrome)</p><p> With each year's iteration, PWA gets more and more close to native applications, and the current implementation is very promising. I better not get into details abut PWA, <a href="https://developers.google.com/web/progressive-web-apps/">The official PWA page</a> has a lot of information. But in short, PWA has some mandatory components and features:</p><ol><li>The Application has a Valid <strong>Manifest</strong></li><li>The Application installs a <a href="https://developers.google.com/web/fundamentals/primers/service-workers/">service worker</a>, that handles how the app will handle in offline. Basically getting rid of the dinosaur game.  </li><li>Is served from a secure origin (HTTPS), and doesn't have mixed content. (e.g: any linked file from insecure origin)</li></ol><p>Here comes the good part, when you run <code>npm build</code> on a  <code>create-react-app</code> application. Guess what, in production application, it creates a <code>manifest</code>, and also utilizes a Service worker to serve the application <code>cache-first</code> .</p><p>Allthough it was almost there... I had to do two small changes to turn it into full fledge Progressive web app.</p><h3 id="first-step-editing-the-manifest">First Step: Editing the manifest</h3><p>The default manifest can be found in: <code>public/manifest.json</code> and is almost 99% complete. It needs some minot adjustments. The default manifest looks something like this:</p><!--kg-card-begin: code--><pre><code>{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+</code></pre><!--kg-card-end: code--><p>There are some obvious changes to be made, like the <code>name</code> and <code>short_name</code> values. Then comes the most important part: The icon. PWA requires a mandatory <code>192x192</code> icon and a <code>512x512</code> icon is highly recommended. So I copied the icon files in the <code>public</code> folder and added the records in the manifest:</p><!--kg-card-begin: code--><pre><code>"icons": [
+    {
+      "src": "icon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],</code></pre><!--kg-card-end: code--><p>Neat. I also changed the <code>theme_color</code> and <code>background_color</code> variables to match the color scheme of my application. If you application is being served from a static file server, leave the <code>start_url</code> the same. Or in my case, I had to make a minor change there: </p><!--kg-card-begin: code--><pre><code> "start_url": "/"</code></pre><!--kg-card-end: code--><p>the already available <code>"display":"standalone"</code> makes it load without any address bar or browser UI (Like a 'standalone' APP) and is a vital part of the PWA ecosystem. For more content rich apps and games, the <code>"display":"fullscreen"</code> value can also be used (still not supported by safari at the time of writing this post).</p><p><a href="https://developers.google.com/web/fundamentals/web-app-manifest/">To know more about Manifest, Click here.</a></p><h3 id="second-step-enabling-the-service-worker">Second Step: Enabling the service worker</h3><p>Every PWA requires a working and registered service worker. If you go to the <code>src/index.js</code> file, you should find something like this (the latest version during writing this, had this):</p><!--kg-card-begin: image--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/content/images/2020/02/Screenshot-2020-02-18-at-3.53.30-PM.png" class="kg-image"><figcaption>Service worker part</figcaption></figure><!--kg-card-end: image--><p>You just need to replace the <code>unregister()</code> to register. So that the source code looks like this: </p><!--kg-card-begin: image--><figure class="kg-card kg-image-card"><img src="/content/images/2020/02/Screenshot-2020-02-18-at-3.56.28-PM.png" class="kg-image"></figure><!--kg-card-end: image--><p> ... And you are done for the most part.</p><h3 id="controlling-the-install-flow-">Controlling the install flow: </h3><p>If you build your application after the above manifest change, upload it in a <em>https</em> origin and navigate to it using latest <a href="https://play.google.com/store/apps/details?id=com.android.chrome">Chrome for android</a> or similar modern browser, You should see a <em>Add To HomeScreen</em> bar at the bottom of it. Many modern browser should automatically show it. Your users can click it and install the application. But let's see if we can improve this. </p><blockquote>Oddly enough, The people behind Progressive web apps thought they should restrict the developer from giving total control over letting their users to install PWA. In order to let the user install it, The application needs to be <strong>Eligible</strong> first in the user's browser. Once the browser determines that the user is actually interested in the application, Only then the developer(application) gets the chance to show install prompt. </blockquote><blockquote>I really wonder why didn't they do the same with Push notification API, or Geolocation API. I'm super tired of the push notification prompt showing in roughly every one out of three sites I visit. </blockquote><p>Back to topic, In order to know when the browser declares the eligibility, the application needs to listen for the event <code>beforeinstallprompt</code>, once the browser fires that event, The user can store the event object, and then whenever the user needs to show the install prompt, the application should call <code>prompt()</code> on the event object. But there's a catch. <code>prompt()</code> can be only called once on an event reference. If the user denies installation, The application will have to keep listening  for the <code>beforeinstallprompt</code> event, and this time it will obviously invoke much later. Only then the user can call <code>prompt()</code> on the new event again. All these to make sure the user is annoyed. I wish public services in our country were as careful.</p><p>There's another catch. You cannot just automatically call <code>prompt()</code> that won't work either, it has to be called from a <strong>user generated event</strong>. </p><p>The way most of the developers do it is, when the event <code>beforeinstallprompt</code> is invoked, they store a reference to the event in a public or easily accessible scope, and then shows a button. Once the button is clicked, inside the <code>click</code> event handler of the button, The <code>prompt()</code> function is called on the event reference. </p><p>In my case I used a small react Component I made : <a href="https://github.com/theanam/react-simple-conditional">react-simple-conditional</a> to render JSX based on a condition to render the button based on a <em>boolean</em> <code>state</code> value.</p><p>Listened for the <code>beforeinstallprompt</code> event inside the <code>componentDidMount()</code> event on the <code>App</code> Component. Once the event invokes, stored the event in a public class variable on the <code>App</code> Component class, And then made the previously mentioned state value to <code>true</code> The code looked someting like this:</p><!--kg-card-begin: code--><pre><code>installPrompt = null;
+componentDidMount(){
+    console.log("Listening for Install prompt");
+    window.addEventListener('beforeinstallprompt',e=&gt;{
+      // For older browsers
+      e.preventDefault();
+      console.log("Install Prompt fired");
+      this.installPrompt = e;
+      // See if the app is already installed, in that case, do nothing
+      if((window.matchMedia &amp;&amp; window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true){
+        return false;
+      }
+      // Set the state variable to make button visible
+      this.setState({
+        installButton:true
+      })
+    })
+  }</code></pre><!--kg-card-end: code--><p>The above code is a a part of the <code>App</code> Class, and then added a function on the class for the button to use:</p><!--kg-card-begin: code--><pre><code>installApp=async ()=&gt;{
+    if(!this.installPrompt) return false;
+    this.installPrompt.prompt();
+    let outcome = await this.installPrompt.userChoice;
+    if(outcome.outcome=='accepted'){
+      console.log("App Installed")
+    }
+    else{
+      console.log("App not installed");
+    }
+    // Remove the event reference
+    this.installPrompt=null;
+    // Hide the button
+    this.setState({
+      installButton:false
+    })
+  }</code></pre><!--kg-card-end: code--><p>Now in the render function, inside JSX, I used my <a href="https://github.com/theanam/react-simple-conditional">conditional component</a> to conditionally render the button, also added the function as the <code>onClick</code> prop of the button:</p><!--kg-card-begin: code--><pre><code>&lt;Conditional condition={this.state.installButton}
+             style={styles.installBtn}
+             onClick={this.installApp}&gt;
+            Install As Application
+          &lt;/Conditional&gt;</code></pre><!--kg-card-end: code--><p> Added some styles to make it look like a sticky button, ...and done!</p><h3 id="a-note-about-static-assets-">A note about Static assets: </h3><p>Static assets like images can be copied in the public folder and used from there in your application, but I noticed that the service worker does not cache them for offline use. So Instead I loaded them directly inside the code, and let webpack handle the rest (keep images in the <code>src</code> folder for this to work):</p><!--kg-card-begin: code--><pre><code>import myLogo from './img/logo.png';</code></pre><!--kg-card-end: code--><p>And then from inside the render function, with JSX,</p><!--kg-card-begin: code--><pre><code>&lt;img src={myLogo} alt="Application Logo"/&gt;</code></pre><!--kg-card-end: code--><p>btw, I also got warning from ESLint for using the word 'image' inside the <code>alt</code> prop (attribute) of the <code>img</code> component(element), so don't do it. </p><p>And you are done. Build the application, and host the <code>build</code> folder. Enjoy your shiny new Progressive web application. </p><blockquote>Let me know your feedback on this post.</blockquote>

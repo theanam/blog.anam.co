@@ -1,0 +1,5 @@
+<ul class="nav" role="menu">
+  {% for item in site.navigation %}
+    <li class="nav-{{ item.label | slugify }}" role="menuitem"><a href="{{ item.url | relative_url }}">{{ item.label }}</a></li>
+  {% endfor %}
+</ul>

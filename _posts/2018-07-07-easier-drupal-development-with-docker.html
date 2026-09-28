@@ -1,0 +1,41 @@
+---
+title: "Easier Drupal Development with Docker"
+date: 2018-07-07 23:07:45 +0000
+permalink: /easier-drupal-development-with-docker/
+slug: "easier-drupal-development-with-docker"
+ghost_id: "5b81ac0fc23e4b0001dae8ab"
+tags: ["docker", "devops", "drupal", "english"]
+excerpt: "In one of my previous post, I discussed about how I moved away from Drupal and started using Ghost for my blog. Drupal was like a big gun for a small job in"
+image: "https://images.unsplash.com/photo-1500017812406-0949464d0e30?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ"
+last_modified_at: 2018-12-11 04:51:39 +0000
+redirect_from:
+  - /easier-drupal-development-with-docker/amp/
+render_with_liquid: false
+---
+<p>In one of my previous post, I discussed about how I <a href="https://blog.anam.co/migrating-my-blog-from-drupal-to-ghost/">moved away from Drupal</a> and started using Ghost for my blog. Drupal was like a big gun for a small job in that case. But still, as a content management framework for quickly prototyping complex projects, Drupal is still my first choice. </p><p>The last time I used Drupal in a production project was when <strong>Drupal 7</strong> was the latest version. A lot has changed since then, Drupal has a brand new version: <strong>Drupal 8</strong> and I didn't have chance to check it out. </p><p>Recently I had an idea about a project that I wanted to prototype. Among all the option in hand, Drupal was one of the best choices for that project. I wanted to start as fast as possible without working too much on configuration. I also wanted to share the development among my three development Mac 😎</p><p>I started by <a href="https://www.drupal.org/download">downloading <strong>Drupal 8.5</strong></a> in my computer, unpacked the archive, then deleted everything except for the <code>modules, profiles, sites, themes</code> folder. created a folder named <code>data</code> for mysql And added a <code>docker-compose.yml</code> file. The whole folder structure looked like this:</p><pre><code>data/
+docker-compose.yml
+modules/
+profiles/
+sites/
+themes/</code></pre><p>In drupal 7, only the <code>sites</code> folder needed to be stored as persistent, but for drupal 8, they changed the folder structure, the theme, module, profiles and sites folder needs to be persistent now. The data folder will be used by mysql to persist data. </p><p>As my computer had <a href="http://docker.io/">Docker</a> and <a href="https://docs.docker.com/compose/">Docker-compose</a> already installed, it was only a matter of writing the compose file for the project, I tried to keep it as simple as possible. Here's the compose file I wrote:</p><pre><code>version: "3"
+services:
+  drupalapp:
+    image: drupal:8-apache
+    volumes:
+      - ./modules:/var/www/html/modules
+      - ./profiles:/var/www/html/profiles
+      - ./sites:/var/www/html/sites
+      - ./themes:/var/www/html/themes
+    ports:
+      - 8090:80
+    restart: always
+  database:
+    image: mysql:5.7
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=drupal
+      - MYSQL_USER=drupal
+      - MYSQL_PASSWORD=supersecret
+    restart: always</code></pre><p>In this compose file, there are two service defined, One uses the <code>drupal:8-apache</code> base image this is from the <a href="https://hub.docker.com/_/drupal/">Official Drupal Docker Image</a>, the container will have four volumes (for the folders mentioned previously) and host port <code>8090</code> will be mapped to the container port <code>80</code> </p><p>The <code>database</code> service is based on the <a href="https://hub.docker.com/_/mysql/">official Mysql image</a>, and has one volume to persist the database data. the mysql configuration was supplied using environment variables. </p><p>Once the compose file is complete, I ran the below command:</p><pre><code>docker-compose up -d</code></pre><p>The command pulled the images and did all the rest of the magic, then two services turned on successfully. I went to the web browser, navigate to <a href="http://localhost:8090">localhost:8090</a>, and was greeted with the Drupal installer page.</p><p>In the database configuration page of the the Installer,  I set in the config set in the compose file. For the database server in the advanced section, the database service name in compose (in this case <code>database</code>) is used. It looked something like this:</p><figure class="kg-image-card"><img src="/content/images/2018/07/Screen-Shot-2018-07-08-at-4.47.12-AM.png" class="kg-image"><figcaption>Database Configuration </figcaption></figure><p>Once the installation was done, I had a Drupal instance up and running. It's easy to share the installation too, the compose file with the folders can regenerate the whole thing with one simple compose command:</p><pre><code>docker-compose up -d</code></pre><p>And the changes made in the theme and plugins stay. Thanks to the volumes 🤞🏾</p><blockquote>This might not be the best setup for Drupal out there, this is what I used, if you have better setup in mind, please let me know in the comments.</blockquote><p></p>

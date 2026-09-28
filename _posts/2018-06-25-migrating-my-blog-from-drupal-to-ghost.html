@@ -1,0 +1,37 @@
+---
+title: "Migrating My Blog from Drupal to Ghost"
+date: 2018-06-25 01:23:22 +0000
+permalink: /migrating-my-blog-from-drupal-to-ghost/
+slug: "migrating-my-blog-from-drupal-to-ghost"
+ghost_id: "5b81ac0fc23e4b0001dae8a7"
+tags: ["docker", "ghost-tag", "drupal7", "drupal", "english"]
+excerpt: "I am a Drupal Fan. Most of the CMS related work I did in PHP involved Drupal. So when it was time to make my own blog back in 2013, I chose Drupal"
+image: "https://images.unsplash.com/photo-1500989145603-8e7ef71d639e?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=ecb03a017810c4ac4efad4475725773d"
+last_modified_at: 2018-11-28 05:09:46 +0000
+redirect_from:
+  - /migrating-my-blog-from-drupal-to-ghost/amp/
+render_with_liquid: false
+---
+<p>I am a <a href="https://drupal.org">Drupal</a> Fan. Most of the CMS related work I did in PHP involved Drupal. So when it was time to make my own blog back in 2013, I chose Drupal without having second thought. Although <a href="http://wordpress.org">WordPress</a> was really popular and easier that time, I still went for Drupal. It was, in a sense, Like a tribute for me. I even kept the original "Powered by Drupal" footer.</p><p>This is how my blog used to look: </p><figure class="kg-image-card"><img src="/content/images/2018/06/Screen-Shot-2018-06-25-at-6.34.11-AM.png" class="kg-image"></figure><p>For the most part, It did what it was supposed to do. In fact, it did the job really well. I became busy to pay my bills, After every couple of month or more, I used to come to my blog, reset the password(because I keep forgetting it) and write an article, then forget about it. </p><p>This went on for quite some time, and one day a Facebook Friend of mine, Knocked me in messenger. He asked with my blog URL if it was my blog. I said yes it is! then what he did was surprising, and shocking. He sent me another URL, this time of a text file, hosted in <strong>My Freaking Server</strong> and when I followed the link, the text file contained: </p><pre><code>Dear brother, Your site has serious Vulnerability. That's how I could create this file. </code></pre><p>I was shocked, in shame and  felt really bad for myself. I also felt really thankful to that person. He said this bug was a very old one, but as I did not update Drupal core for the last three years, it was still there. Definitely my laziness and carelessness was to blame for it. </p><blockquote>I still thank god that it was spotted by a <strong>White Hat Hacker </strong></blockquote><p>I updated Drupal core and was saved that time. But I had a fear in my mind about it. I kept updating Drupal core every two month (Allthough I did not write any blog). But I was feeling that my 2013 blog was getting old, and updating was getting difficult.</p><h3 id="the-reasons-behind-the-migration-">The reasons behind the migration:</h3><ol><li>The blog was hosted in a shared PHP hosting, Although one of my closest friends own that hosting company, I always felt lack of control. And if I needed to change anything on the server, it was time consuming. I did not have shell access so I could not use <a href="https://github.com/drush-ops/drush">Drush</a> with Drupal. </li><li>To update Drupal core on that server, I had to backup the <code>sites</code> folder, delete everything, unzip the latest version, configure <code>settings.php</code> and then put back the sites folder. Obviously this process was not reliable. And there were always a chance for thousands of things to go wrong.</li><li>My blog started to look Old. The theme was from 2013. The theme was built with older HTML and CSS, and the design was old.</li><li>The blog was tough to scale. If I expected more load, I had to call the server administrator to increase resources (Already mentioned I was feeling lack of control)</li><li>I wanted to go pure markdown. I installed markdown filter for Drupal and could write posts in markdown. But I always craved for a better editor inside the blog itself.</li><li>My blog was using Drupal 7, a very old version in current days. At the time of writing this post Drupal 9 is already a thing. and Drupal 7 support is scheduled to end within a year.</li></ol><p>With all the above reasons, It was a matter of choosing another blogging application. I had a lot of choices. I seriously considered going for a hosted platform like wix or SquareSpace. Then what's the fun in that?</p><p>I had a crush on Ghost since the day it was released.I liked it a lot. <a href="https://blog.anam.co/ghost-just-a-blogging-platform-full-of-awesomeness/">I even wrote a blog post about it</a>. And if you go to the <a href="xhttps://blog.anam.co/docker-in-bangla/">previous post in my blog</a> (Which is in Bangla) I talked about my journey of learning Docker. I thought to myself, this could be a great Practice project! So I decided to create my blog with Ghost, inside a docker container.</p><h3 id="the-approach-i-took">The Approach I took</h3><p>There were some simple steps I had to take in order to get my ghost blog up and running. Here's what I did:</p><ol><li>Bought a droplet in <a href="https://m.do.co/c/259260c8b6f2">Digital Ocean</a> , Configured it with Ubuntu.</li><li>Installed <code>docker</code> in the droplet.</li><li>Created a folder for the ghost application, created a <code>docker-compose.yml</code> file in that folder, and created a folder <code>data</code> to persist data (did not use mysql, went with sqlite for the first version) and here's how my compose file looks like:</li></ol><pre><code>version: "3"
+
+services:
+    ghostapp:
+       image: ghost:2
+       ports:
+         - "2368:2368"
+       volumes:
+         - ./data:/var/lib/ghost/content
+       restart: always
+       environment:
+         - NODE_ENV=production
+         - url=https://blog.anam.co</code></pre><p>If you want to know more about docker compose. You can learn it from <a href="https://docs.docker.com/compose">Here</a> </p><p>Then I ran the command <code>docker-compose up -d</code> and the application started. Only thing left was to configure nginx to forward traffic to it. </p><p>So, I wrote a reverse-proxy configuration in nginx, that looks something like the following:</p><pre><code>server{
+   server_name blog.anam.co;
+   listen 80;
+   location /{
+	proxy_pass http://localhost:2368;
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-Ip $remote_addr;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+   }
+}</code></pre><p>And then I needed to install SSL certificate. For that I used <a href="https://letsencrypt.org/">Let's encrypt's SSL</a> via their certbot (It's really simple I might write a blog post about it in the future)</p><p>And the last thing I did was pointing the domain <code>blog.anam.co</code> to the new server.</p><p>Then I manually migrated all the contents from the older server to the new one (did not automate or look for any tool as there were only a few articles)</p><h4 id="and-like-that-the-migration-was-complete-">And like that..The migration was complete. </h4><p></p><blockquote>If I share this post, you'll know that everything went well.</blockquote>

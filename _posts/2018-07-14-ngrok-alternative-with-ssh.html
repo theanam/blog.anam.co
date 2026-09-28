@@ -1,0 +1,38 @@
+---
+title: "Use your VPS as Ngrok Alternative (with SSH)"
+date: 2018-07-14 22:42:00 +0000
+permalink: /ngrok-alternative-with-ssh/
+slug: "ngrok-alternative-with-ssh"
+ghost_id: "5b81ac0fc23e4b0001dae8ae"
+tags: ["linux", "devops", "english"]
+excerpt: "ngrok is a very handy tool for exposing local applications to the internet. I've been using it for a very long time.It does a good job, but the free version comes with limitations."
+image: "https://images.unsplash.com/photo-1516618317270-b99d1715c58d?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=d69c54d3446c33044b6c74bac6103b72"
+featured: true
+last_modified_at: 2018-11-28 05:08:43 +0000
+redirect_from:
+  - /ngrok-alternative-with-ssh/amp/
+render_with_liquid: false
+---
+<p><a href="https://ngrok.com/">ngrok</a> is a very handy tool for exposing local applications to the internet. I've been using it for a very long time.It does a good job, but the free version comes with limitations. There's a lack of freedom and you cannot even specify a fixed domain. Every time Ngrok is restarted,  you get a new domain. This is a problem if you are working on a project that heavily relies on incoming web hooks.</p><p>By the end of this article, we will write a small application, that will let you access your local application from your own domain. </p><p>Things you need:</p><ol><li>A domain name, and the ability to change it's DNS records.</li><li>A VPS server (<a href="https://m.do.co/c/259260c8b6f2">You can get one from Digital Ocean</a>)</li><li>SSH Access to the VPS server. key based authentication is preferred.</li><li>SSH CLI Client installed in your local computer.</li><li>Patience and ability to follow instructions.</li></ol><blockquote>Please do it at your own risk, avoid production servers. Some of the commands might be harmful. </blockquote><blockquote>Many of the commands will require Linux or mac as local computer. If you want to do it on windows, please use <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Linux Subsystem on Windows</a>.</blockquote><h4 id="start-by-pointing-your-sub-domain-to-the-server-ip-address-">Start by Pointing your (sub)domain to the server IP address:</h4><p>Open up the DNS editor and add a new<strong> A record</strong>. For the sake of this tutorial, let's assume, your domain name is <code>yourdomain.com</code> and the A record is : <code>livedemo</code>. Enter the server's <strong>public IP address</strong> as the record value. leave the TTL field to default. At this point, the url: <code>livedemo.yourdomain.com</code> should point to your server's IP address. </p><h4 id="configuring-the-vps-server">Configuring the VPS server</h4><p>You have to enable <code>GatewayPorts</code> in your server's SSH configuration. In order to do so, SSH into the server and open the file <code>/etc/ssh/sshd_conf</code> and add the following lines at the end of it. </p><pre><code># Add GatewayPorts support
+GatewayPorts yes</code></pre><p>and then restart SSH server by running the following command for the changes to take effect:</p><pre><code>service ssh restart</code></pre><h4 id="let-s-create-our-very-first-tunnel-manually-">Let's create our very first Tunnel manually:</h4><p>We will use a SSH feature called <strong>remote port forwarding.</strong> If you have a local application running in port <strong>3000</strong>  and you want to access it from port <strong>7070</strong> in the remote server, you can write a command like this in the local computer to create a tunnel(assuming <em>root </em>is your SSH user):</p><pre><code>ssh -R 7070:localhost:3000 -N root@your-server-ip</code></pre><p>Let's look at the anatomy of the command:</p><pre><code>ssh -R &lt;server-port&gt;:localhost:&lt;local-port&gt; -N &lt;server-username&gt;@&lt;server-ip&gt;
+    </code></pre><p>the <code>-R</code> flag determines that It's a <strong>Remote port forwarding, </strong>And the <code>-N</code> flag prevents the SSH command from landing into the remote server's shell.</p><p>As long as you don't terminate the process, you will be able to access your local application with the url (<strong>we created previously) </strong>on port 7070<strong> </strong>using this URL:<strong> </strong><code>livedemo.yourdomain.com:7070</code></p><h4 id="let-s-turn-it-into-a-small-and-reusable-command-">Let's turn it into a small and reusable command:</h4><p>This command isn't that long, but it's still inconvenient compared to Ngrok. Let's fix that. We will call our tiny program <code>batman</code>, Let's create a file in <code>/usr/local/bin</code> named <code>batman</code> in the local computer, and give it <strong>execution permission </strong>by running <code>chmod +x /usr/local/bin/batman</code> and add the following content :</p><pre><code>#!/bin/sh
+echo "Sharing port $1 press Ctrl+C to exit"
+ssh -R 7070:localhost:"$1" -N root@your-server-ip</code></pre><p>Save the file. Now you have a small and reusable command. You can share application running on any port, with the following command from the local computer. For example, if you want to share application running on port <strong>3000, </strong>Just enter the following command:</p><pre><code>batman 3000</code></pre><p>You should see an output like this:</p><figure class="kg-image-card"><img src="/content/images/2018/07/Screen-Shot-2018-07-15-at-6.10.17-AM.png" class="kg-image"></figure><p>Now if you navigate to <code>livedemo.yourdomain.com:7070</code> you should be able to access the application.</p><h4 id="getting-rid-of-the-port-number-and-using-ssl-">Getting rid of the port number and using SSL:</h4><p>You can use port <strong>80 </strong>if if isn't already used instead of <strong>7070.</strong> But if you have that luxury, probably you would buy Ngrok premium instead if going for this method. Let's use our old friend Nginx Instead to help us regarding this. We will create a reverse proxy to forward traffic from <strong>port 80 </strong>on domain <code>livedemo.yourdomain.com</code> to port <strong>7070</strong>.</p><p>Install nginx in the server (if not already installed), and write a new configuration in the folder <code>etc/nginx/sites-available</code> named <code>livedemo.yourdomain.com</code>, with the following content:</p><pre><code>server{
+   server_name livedemo.yourdomain.com;
+   listen 80;
+   location /{
+	proxy_pass http://localhost:7070;
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-Ip $remote_addr;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	proxy_set_header X-Forwarded-Proto $scheme;
+	error_page 502 /500.html;
+   }
+   location /500.html{
+	return 500 "&lt;center&gt;Nothing to show...&lt;/center&gt;";
+   }
+}</code></pre><p>Don't forget to make a symlink and restart the server:</p><pre><code># Create Symlink
+ln -s /etc/nginx/sites-available/livedemo.yourdomain.com /etc/nginx/sites-enabled/
+
+# Restart Nginx
+service nginx restart</code></pre><p>Now if you navigate to <code>livedemo.yourdomain.com</code>  and <code>batman</code> is running in your local computer, you should be able to access your application. No port required.</p><p>If you want to add SSL support, you can use free SSL from <a href="https://letsencrypt.org/">Let's Encrypt</a>. I will not go into details in this post, They have excellent documentation.</p><p>There you have it! your very own Ngrok alternative on your very own domain. If you like the post feel free to share. Add comment if you find any mistake or have any queries.</p>

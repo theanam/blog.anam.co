@@ -1,0 +1,76 @@
+---
+title: "Providing a Client side download with JavaScript and HTML5"
+date: 2016-03-28 00:19:00 +0000
+permalink: /providing-a-client-side-download-with-javascript-and-html5/
+slug: "providing-a-client-side-download-with-javascript-and-html5"
+ghost_id: "5b81ac0fc23e4b0001dae8a5"
+tags: ["javascript", "html5", "download-api", "english"]
+excerpt: "The web is changing, Offline web applications are getting popular rapidly. Crazy things are happening in your browser that were only possible on the server before. For example, you can create and manipulate"
+image: "https://images.unsplash.com/photo-1521623475836-87d82a22184f?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=ffc8f1d93cbb40d8469da849a8ab7a6f"
+last_modified_at: 2018-11-28 05:09:56 +0000
+redirect_from:
+  - /providing-a-client-side-download-with-javascript-and-html5/amp/
+render_with_liquid: false
+---
+<p>The web is changing, Offline web applications are getting popular rapidly. Crazy things are happening in your browser that were only possible on the server before. For example, you can create and manipulate images in your browser with HTML5 Canvas, create and manipulate SVG vectors, capture and manipulate video/audio from input devices with Web RTC. Cool, right?definitely cool! as you have a plenty of things you could probably want to save, Client side download is really essential. Let's go through the process how I managed to do it, limitations and how I took care of them. There may be better ways. some are still experimental (unfortunately, Browser support is still an issue) and some I may not know about, <strong>feel free to share your thoughts in the comments section</strong>. I'll explain some points on how the browser handles file types and some other things as well, I think you'll have fun.</p>
+<p>I did the same thing while I was working on one of my open source projects, <a href="https://github.com/theanam/manifestgen">the Firefox OS app manifest generator</a>, check out <a href="http://theanam.github.io/manifestgen/">the application here</a>, as it runs inside github, I had to find a way to offer client side download.</p>
+<h3 id="mimetypes">Mime types :</h3>
+<p>a mime type tells your browser what type of content it's receiving. for example, html pages have a mime type of <em>text/html</em>, png images have a type of <em>image/png</em> and so on. so every different type of file has different mime types. Web browsers decide what to do with a file by it's mime type. and it tries to open known mime types. for example, modern browsers are capable of opening html files, image files, audio/video files as well. if the server serves an image file, the browser opens it, rather than prompting you to save it. same goes for known audio video types. browsers tend to save (or prompt you with a download dialog) when it finds an unknown mime type.<br>
+I've used a mime type - <strong>application/text</strong> , cause browsers tend to show text/* files.</p>
+<h3 id="datauri">Data URI :</h3>
+<p>Data URI is used to represent data in the form of a URI, you've probably seen it in action with base64 encoded images. data  URI's start with <strong>data:</strong> followed by the mime type, open up your browser and type</p>
+<pre><code>data:text/html,&lt;h1&gt;this is a html file generated in your address bar&lt;/h1&gt;
+</code></pre>
+<p>cool! right, your browser successfully rendered it as html file. okay, now let's make the browser save the file instead of downloading it. type these in your addressbar:</p>
+<pre><code>data:application/text,hello world, saving file generated in your address bar
+</code></pre>
+<p>you should have a download dialog/file downloaded by now. open the file, and you may see what you've written, in the file. <strong>notice that the spaces are gone</strong>. this is a problem specific for <strong>text files only</strong>, because your text file contents wasn't encoded as URI,URI's represent spaces with a <code>%20</code> some other special characters have different meaning as well, we'll fix this with JavaScript later on in this article.</p>
+<h3 id="filename">File name :</h3>
+<p>you might have noticed that the file name is a random name or parts of your content, without extension. This is probably something you don't want, we'll be using the <code>download</code> attribute introduces in HTML5, to understand how it works, create a HTML file, and write these,</p>
+<pre><code> &lt;!DOCTYPE html&gt;
+ &lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+   &lt;meta charset=&quot;UTF-8&quot;&gt;
+   &lt;title&gt;Client side download&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+     &lt;a href=&quot;data:application/text,hello world&quot; download=&quot;anam.txt&quot;&gt;Click me&lt;/a&gt;
+  &lt;/body&gt;
+ &lt;/html&gt;
+</code></pre>
+<p>the file contains only one <code>a</code> element, look at it's <code>href</code> attribute, our data URI is there. and it has a <code>download</code> attribute, that specifies the file name. open the file in your browser and click on the link, a file named, <strong>anam.txt</strong> should be downloaded. great! but the space problem is still there. that's what we need JavaScript for.</p>
+<h3 id="afullexample">A full example</h3>
+<p>Let's create a HTML file with a text area and a download link, our goal is to download the contents of the text file when the user clicks the download link. The application will also prompt for a file name before downloading. Let's get started.</p>
+<p>Let's modify our previous file and write this:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+ &lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Client side download&lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+   &lt;textarea id=&quot;content&quot;&gt;type your text here&lt;/textarea&gt;&lt;br&gt;
+   &lt;a id=&quot;download&quot; href=&quot;#&quot; download=&quot;&quot;&gt;Click me&lt;/a&gt;
+ &lt;/body&gt;
+&lt;/html&gt; 
+</code></pre>
+<p>Let's add some JavaScript to make it functional, add a <code>&lt;script&gt;&lt;/script&gt;</code> tag and write these inside, follow the code comments to find out the mechanism :</p>
+<pre><code> //get the dom element for download link
+ var downloadLink = document.querySelector('#download');
+ //run the code when user clicks the download link
+ downloadLink.addEventListener('click',function(){
+   //get the content of the text area
+   var content = document.querySelector('#content').value;
+   //encode the content and make it data URI
+   var contentURI = 'data:application/manifest,'+encodeURIComponent(content);
+   //set it as the href of the a element
+   downloadLink.setAttribute('href',contentURI);
+   //prompt for a file name or use download.txt as defaule
+   var filename = prompt('Enter Filename') || 'download.txt';
+   //set the filename as download attribute
+   downloadLink.setAttribute('download',filename);
+}); 
+</code></pre>
+<p>open the file with your browser. everything should be working.</p>
+<p>You can use this approach to do a lot of client side magics. Use the comment section to express your thoughts.</p>
+

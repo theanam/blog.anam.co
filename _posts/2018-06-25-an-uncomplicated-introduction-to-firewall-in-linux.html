@@ -1,0 +1,36 @@
+---
+title: "An uncomplicated introduction to Firewall in linux(UFW on Ubuntu)"
+date: 2018-06-25 09:24:12 +0000
+permalink: /an-uncomplicated-introduction-to-firewall-in-linux/
+slug: "an-uncomplicated-introduction-to-firewall-in-linux"
+ghost_id: "5b81ac0fc23e4b0001dae8a8"
+tags: ["linux", "firewall", "devops", "english"]
+excerpt: "When I heard the name Firewall for computer network, I imagined it to be a protective layer that destroys anything harmful in the transport. Like a wall of actual fire (please don't judge"
+image: "https://images.unsplash.com/photo-1516798600250-395dc1e37e17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=24a2b4bff96f90040dace36faf3ab631"
+last_modified_at: 2018-11-28 05:09:33 +0000
+redirect_from:
+  - /an-uncomplicated-introduction-to-firewall-in-linux/amp/
+render_with_liquid: false
+---
+<p>When I heard the name Firewall for computer network, I imagined it to be a protective layer that destroys anything harmful in the transport. Like a wall of actual fire (please don't judge me, I was young and imaginative)</p><p>As I grew up, the urge to learn more about firewall was lost in the process of learning cooler and commercially viable technologies. But back in 2011, I tried to deploy a WordPress application in a linux server for the very first time. I did it several times in shared hosting, but never did it by my own on a Linux server. And after I deployed the application, I expected everything to work, I even made a curl request from inside the server, and it seems to be working fine. </p><p>But when I tried to access the application from outside, The application wasn't working 😠. I tried everything(I thought I did), still no luck.  Then I did what every other engineer would do, I searched for the solution and found it in StackOverflow. </p><p>The solution had something to do with <code>iptables</code> , I just copied and pasted Like a boss, and then the problem was solved. And I had an impression that <code>iptable</code> is a tool that opens and closes ports from a linux computer (Still didn't know that was a firewall)</p><p>I came back to <code>iptables</code> while writing <a href="https://blog.anam.co/connectify-alternative-linux/">an article in my blog</a>, with full disclosure, I did not know too much about <code>iptables</code> back then, but I had to study it, and when I looked up <code>iptables</code> I also got introduced with linux host firewall, and their working principles. I had a really tough time figuring out the syntax for <code>iptables</code> command and I always keep forgetting them. </p><p>Two years ago, <a href="https://github.com/milon">One of my Colleagues</a> introduced me to <code>ufw</code> , and I was surprised to see how convenient it was. Suddenly managing <code>iptables</code> became super fun.</p><p>Most ubuntu distributions come with <code>ufw</code> preinstalled, if it's not included, installing it just <em>a package manager command away.</em> And once installed, <code>ufw</code> is disabled by default, and it should.</p><p>Let's start by adding some ground rules, Turn off all incoming connections: </p><pre><code>sudo ufw default deny incoming</code></pre><p>This rule states that incoming connection will be blocked in all the ports (If you are doing it with ssh, don't worry. This rule will only be effective when <code>ufw</code> is enabled)</p><p>Let's allow all outgoing connections(Unless you want to restrict your applications to make outgoing connection...and of course, apt won't work either)</p><pre><code>sudo ufw default allow outgoing</code></pre><p>So far the rules are straightforward, Application on the linux computer can communicate with other computers, but they are not accessible from outside of the server. For example: you can download files from other servers from that linux machine, but nothing will be downloaded from that server. </p><p>Let's start opening windows (pun intended) for some of the services. Let's start by opening SSH:</p><pre><code>sudo ufw allow ssh</code></pre><p><code>ufw</code> knows the default port for SSH (22), so the command will open incoming connection for port 22. If you belong to the clever people group and change the ssh port, you can also mention the port number. For example if the port is 2200: </p><pre><code>sudo ufw allow 2200</code></pre><p>Now if you are planning to run a <code>HTTP/HTTPS</code> Application, those ports can be opened in the same way: </p><pre><code>## FOR HTTP
+
+# By Protocol name
+sudo ufw allow http
+# Or you can enable by port number
+sudo ufw allow 80
+
+## FOR HTTPS
+
+# By Protocol name
+sudo ufw allow https
+# Or you can enable by port number
+sudo ufw allow 443</code></pre><p>When you are done with all the opening and closing, Now it's time to enable <code>ufw</code> , that is one command away. Just run the following command:</p><pre><code>sudo ufw enable</code></pre><p>You might see a warning about SSH, like this screenshot below. In that case, don't worry, we already allowed SSH port. Just input <code>y</code></p><figure class="kg-image-card"><img src="/content/images/2018/06/Screen-Shot-2018-06-25-at-3.17.55-PM.png" class="kg-image"></figure><p>Congratulations! You have successfully configured a basic client firewall. If you run the command  <code>sudo ufw status</code> , you should see something like the following: </p><pre><code>Status: active
+
+To                         Action      From
+--                         ------      ----
+22                         ALLOW       Anywhere
+80                         ALLOW       Anywhere
+443                        ALLOW       Anywhere
+22 (v6)                    ALLOW       Anywhere (v6)
+80 (v6)                    ALLOW       Anywhere (v6)
+443 (v6)                   ALLOW       Anywhere (v6)</code></pre><p>It means everything is working correctly.</p><p>Now, Firewalls, even <code>ufw</code> is more sophisticated and powerful, and I really could not do enough justice to the useful tool with this small article. Please find some of the resources available to learn more about <code>ufw</code></p><blockquote>Hope you Article helped you in some way. </blockquote><h3 id="ufw-resources-">UFW Resources:</h3><p></p><ol><li><a href="https://help.ubuntu.com/community/UFW">UFW on Ubuntu Wiki</a></li><li><a href="http://manpages.ubuntu.com/manpages/precise/man8/ufw.8.html">Manpage for UFW</a></li></ol>

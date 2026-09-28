@@ -1,0 +1,65 @@
+title: "Anam's Blog"
+description: "Useless/Useful thoughts and ideas"
+url: "https://blog.anam.co"
+baseurl: "/"  # jasper2 templates expect a trailing slash
+lang: en
+timezone: Asia/Dhaka
+logo: /content/images/2018/06/bloglogo-1.png
+favicon: /content/images/2018/06/blogfav-1.png
+# Casper's default cover. Off to match the live site, whose cover host (casper.ghost.org) is down.
+# cover: /content/images/blog-cover.jpg
+facebook: theanam
+words_per_minute: 200
+author:
+  name: Anam Ahmed
+  slug: anam
+twitter:
+  username: mranam
+social:
+  links:
+    - https://twitter.com/mranam
+    - https://www.facebook.com/theanam
+    - https://github.com/theanam
+    - https://linkedin.com/in/theanam
+
+navigation:
+  - { label: "Home", url: "/" }
+  - { label: "Linux", url: "/tag/linux/" }
+  - { label: "Containers", url: "/tag/docker/" }
+  - { label: "বাংলা", url: "/tag/bangla-2/" }
+  - { label: "My Github", url: "https://github.com/theanam/" }
+  - { label: "My Linkedin", url: "https://linkedin.com/in/theanam/" }
+
+# Ghost served every post at /<slug>/; each post also sets this explicitly.
+permalink: /:title/
+paginate: 25
+paginate_path: "/page/:num/"
+
+feed:
+  path: feed.xml
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-redirect-from
+
+defaults:
+  - scope: { path: "", type: posts }
+    values: { layout: post, author: anam, class: post-template, current: post }
+  - scope: { path: "", type: drafts }
+    values: { layout: post, author: anam, class: post-template, current: post }
+  # Layout front matter isn't visible as page.*, so the body class Casper's CSS keys on is set here.
+  - scope: { path: "tag" }
+    values: { class: tag-template, current: tag }
+  - scope: { path: "author" }
+    values: { class: author-template, current: author }
+
+exclude:
+  - scripts/
+  - "*.ghost.*.json"
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE-jasper2

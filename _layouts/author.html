@@ -1,0 +1,34 @@
+---
+layout: default
+current: author
+class: author-template
+---
+{% assign a = site.data.authors[site.author.slug] %}
+{% assign offset = page.page_num | minus: 1 | times: site.paginate %}
+{% assign total = site.posts | size | plus: 0.0 | divided_by: site.paginate | ceil %}
+<header class="site-header outer no-cover">
+    <div class="inner">
+        {% include site-nav.html %}
+        <div class="site-header-content">
+            {% if a.picture %}<img class="author-profile-image" src="{{ a.picture | relative_url }}" alt="{{ a.name }}" />{% endif %}
+            <h1 class="site-title">{{ a.name }}</h1>
+            {% if a.bio %}<h2 class="author-bio">{{ a.bio }}</h2>{% endif %}
+            <div class="author-meta">
+                <div class="author-stats">{{ site.posts | size }} posts <span class="bull">&bull;</span></div>
+                {% if a.twitter %}<a class="social-link social-link-tw" href="https://twitter.com/{{ a.twitter }}" target="_blank" rel="noopener">{% include twitter.html %}</a>{% endif %}
+                {% if a.facebook %}<a class="social-link social-link-fb" href="https://facebook.com/{{ a.facebook }}" target="_blank" rel="noopener">{% include facebook.html %}</a>{% endif %}
+                <a class="social-link social-link-rss" href="{{ '/feed.xml' | relative_url }}">{% include rss.html %}</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <div class="post-feed">
+            {% for post in site.posts limit: site.paginate offset: offset %}{% include post-card.html post=post %}{% endfor %}
+        </div>
+    </div>
+</main>
+{% assign base = '/author/' | append: site.author.slug | append: '/' %}
+{% include pagination.html base=base page=page.page_num total=total %}

@@ -1,0 +1,33 @@
+{% assign p = include.post %}
+{% assign wpm = site.words_per_minute | default: 200 %}
+<article class="post-card post{% for t in p.tags %} tag-{{ t }}{% endfor %}{% unless p.image %} no-image{% endunless %}">
+    {% if p.image %}
+        <a class="post-card-image-link" href="{{ p.url | relative_url }}">
+            <div class="post-card-image" style="background-image: url({{ p.image | relative_url }})"></div>
+        </a>
+    {% endif %}
+    <div class="post-card-content">
+        <a class="post-card-content-link" href="{{ p.url | relative_url }}">
+            <header class="post-card-header">
+                {% if p.tags.size > 0 %}<span class="post-card-tags">{{ site.data.tags[p.tags[0]].name | default: p.tags[0] }}</span>{% endif %}
+                <h2 class="post-card-title">{{ p.title }}</h2>
+            </header>
+            <section class="post-card-excerpt">
+                <p>{{ p.excerpt | strip_html | truncatewords: 33, "" }}</p>
+            </section>
+        </a>
+        <footer class="post-card-meta">
+            {% assign a = site.data.authors[p.author] %}
+            {% if a %}
+            <ul class="author-list">
+                <li class="author-list-item">
+                    <div class="author-name-tooltip">{{ a.name }}</div>
+                    <a href="{{ '/author/' | append: p.author | append: '/' | relative_url }}" class="static-avatar"><img class="author-profile-image" src="{{ a.picture | relative_url }}" alt="{{ a.name }}" /></a>
+                </li>
+            </ul>
+            {% endif %}
+            {% assign words = p.content | strip_html | number_of_words %}
+            <span class="reading-time">{% if words <= wpm %}1 min read{% else %}{{ words | divided_by: wpm }} min read{% endif %}</span>
+        </footer>
+    </div>
+</article>

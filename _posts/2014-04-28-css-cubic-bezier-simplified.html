@@ -1,0 +1,36 @@
+---
+title: "Learn CSS3 cubic-bezier like a Boss. (cubic-bezier timing function simplified for beginners)"
+date: 2014-04-28 00:11:00 +0000
+permalink: /css-cubic-bezier-simplified/
+slug: "css-cubic-bezier-simplified"
+ghost_id: "5b81ac0fc23e4b0001dae8a2"
+tags: ["css", "cubic-bezier", "english"]
+excerpt: "So, You know how to use easing in animation and transition . you've probably used properties like, linear, ease, ease-in, ease-out, ease-in-out and probably you have seen something like cubic bezier and tried"
+image: "https://images.unsplash.com/photo-1433840496881-cbd845929862?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=f048aea7591e2f3b7ff164a3f0fbdbc6"
+last_modified_at: 2018-11-28 05:10:17 +0000
+redirect_from:
+  - /css-cubic-bezier-simplified/amp/
+render_with_liquid: false
+---
+<p>So, You know how to use easing in <strong>animation</strong> and <strong>transition</strong>. you've probably used properties like, <em>linear, ease, ease-in, ease-out, ease-in-out</em> and probably you have seen something like <strong>cubic bezier</strong> and tried some web search and found some good articles, well, great! but this post is aimed at people who didn't figure out the main concept of cubic bezier timing functions. It's like a <strong>swiss knife</strong>  that wil improve your CSS3 animations dramatically. Keep calm and relax, it's not hard, and yes not that much technical or mathematical either. A great and detailed article on CSS timing functions including a very good explaination on cubic-bezier was published recently in <a href="http://www.smashingmagazine.com/2014/04/15/understanding-css-timing-functions/">Smashing magazine</a>, if you want technical and detailed explaination, feel free to read that article instead of reading this.</p>
+<p>anyways, let's start the easy way, what if, you didn't require to understand cubic bezier, yes possible. Fortuntely one of the greatest legends <a href="http://lea.verou.me">Lea Verou</a> created a graphical tool with care, to create custom cubic bezier.</p>
+<h2 id="cubicbeziercom"><a href="http://cubic-bezier.com">cubic-bezier.com</a></h2>
+<p><img src="http://anam.co/assets/bezier1.png" alt="Lea Verou bezier"></p>
+<p>Cool! Isn't it? okay, if you still want to know a little more, please continue reading, if you don't already know, cubic bezier consists of <em>four points</em> on a two dimentional axis, so, each point has two values , <strong>X</strong> and <strong>Y</strong> . fortunately, you don't need to think about all four of them, the first point is  <strong>Always fixed at (0,0)  which marks the beginning, and the last point is, yes you guessed it right always fixed at (1,1)</strong>, marks the ending. You've probably made another guess, yes, the values in cubic bezier is almost the same as the values of CSS <em>Opacity</em>, values range (well almost) between 0 and 1. So, we are left with two points that means four values, and the cubic bezier function takes four values! okay, let's take a look at the syntax :</p>
+<pre><code class="language-css">cubic-bezier(X1,Y1,X2,Y2)</code></pre>
+<p>you just need to plot the other two points in the function. well, that doesn't simlify cubic bezier. Well let's change the syntax. but before we do so, take a look at the figure below,</p>
+<p><img src="http://anam.co/assets/bezier2.png" alt="Lea Verou bezier"></p>
+<p>See, cubic bezier curve is a time-progression graph! bingo, if we simplify the syntax, it would look something like this,</p>
+<pre><code>   cubic-bezier(time1,progression1,time2,progression2)
+</code></pre>
+<p>so, you can actually specify amount of progression for two point of time, as it's a continuous graph, the change is <em>smooth by nature.</em></p>
+<p>the <strong>time1</strong> and <strong>time2</strong> cannot be <em>more or less than the 0-1 range</em>, but the progression can, and when it does, something magical happens. yes!! <strong>you can reverse the animation or even get the animation out of it's normal change limit</strong>. Confused?, try the helium experiment, taken from the smashingMagazine article mentioned earlier :</p>
+<p data-height="599" data-width="100" data-theme-id="0" data-slug-hash="vbqBh" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/stephengreig/pen/vbqBh/'>vbqBh</a> by Stephen Greig (<a href='http://codepen.io/stephengreig'>@stephengreig</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p>So, you can mention the amount of progression with the second and fourth values for the first and third part of the total animation running time. That's the best thing about cubic-bezier. The possibilities are uncountable.</p>
+<p>well, you'll find a lot more interesting things to do with cubic bezier on the internet. Looking forward to see all your bezier experiments. add comments below if you like or dislike it.</p>
+<p>last but not the least :</p>
+<blockquote>
+<p>Self help is the best help. Don't forget to research and push things to the limit.</p>
+</blockquote>
+

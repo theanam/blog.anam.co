@@ -1,0 +1,85 @@
+---
+layout: default
+current: post
+class: post-template
+---
+<header class="site-header outer">
+    <div class="inner">
+        {% include site-nav.html %}
+    </div>
+</header>
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <article class="post-full post{% for t in page.tags %} tag-{{ t }}{% endfor %}{% unless page.image %} no-image{% endunless %}">
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%-d %B %Y' }}</time>
+                    {% if page.tags.size > 0 %}
+                        <span class="date-divider">/</span>
+                        <a href="{{ '/tag/' | append: page.tags[0] | append: '/' | relative_url }}">{{ site.data.tags[page.tags[0]].name | default: page.tags[0] }}</a>
+                    {% endif %}
+                </section>
+                <h1 class="post-full-title">{{ page.title }}</h1>
+            </header>
+
+            {% if page.image %}
+            <figure class="post-full-image" style="background-image: url({{ page.image | relative_url }})"></figure>
+            {% endif %}
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    {{ content }}
+                </div>
+            </section>
+
+            <footer class="post-full-footer">
+                {% assign a = site.data.authors[page.author] %}
+                {% if a %}
+                <section class="author-card">
+                    {% if a.picture %}<img class="author-profile-image" src="{{ a.picture | relative_url }}" alt="{{ a.name }}" />{% endif %}
+                    <section class="author-card-content">
+                        <h4 class="author-card-name"><a href="{{ '/author/' | append: page.author | append: '/' | relative_url }}">{{ a.name }}</a></h4>
+                        {% if a.bio %}<p>{{ a.bio }}</p>{% else %}<p>Read <a href="{{ '/author/' | append: page.author | append: '/' | relative_url }}">more posts</a> by this author.</p>{% endif %}
+                    </section>
+                </section>
+                <div class="post-full-footer-right">
+                    <a class="author-card-button" href="{{ '/author/' | append: page.author | append: '/' | relative_url }}">Read More</a>
+                </div>
+                {% endif %}
+            </footer>
+        </article>
+    </div>
+</main>
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            {% if page.tags.size > 0 %}
+                {% assign primary = page.tags[0] %}
+                {% assign related = site.posts | where_exp: "p", "p.tags contains primary" | where_exp: "p", "p.url != page.url" %}
+                {% if related.size > 0 %}
+                <article class="read-next-card"{% if site.cover %} style="background-image: url({{ site.cover | relative_url }})"{% endif %}>
+                    <header class="read-next-card-header">
+                        <small class="read-next-card-header-sitetitle">&mdash; {{ site.title }} &mdash;</small>
+                        <h3 class="read-next-card-header-title"><a href="{{ '/tag/' | append: primary | append: '/' | relative_url }}">{{ site.data.tags[primary].name | default: primary }}</a></h3>
+                    </header>
+                    <div class="read-next-divider">{% include infinity.html %}</div>
+                    <div class="read-next-card-content">
+                        <ul>
+                            {% for p in related limit: 3 %}<li><a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>{% endfor %}
+                        </ul>
+                    </div>
+                    <footer class="read-next-card-footer">
+                        <a href="{{ '/tag/' | append: primary | append: '/' | relative_url }}">See all {{ related.size | plus: 1 }} posts &rarr;</a>
+                    </footer>
+                </article>
+                {% endif %}
+            {% endif %}
+            {% if page.next %}{% include post-card.html post=page.next %}{% endif %}
+            {% if page.previous %}{% include post-card.html post=page.previous %}{% endif %}
+        </div>
+    </div>
+</aside>
+
+{% include floating-header.html %}

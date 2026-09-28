@@ -1,0 +1,69 @@
+---
+title: "কিভাবে করবেন ফায়ারফক্স ও এস এপ্লিকেশন ডেভেলপমেন্ট ?"
+date: 2014-10-09 00:10:00 +0000
+permalink: /firefox-os-development-bangla/
+slug: "firefox-os-development-bangla"
+ghost_id: "5b81ac0fc23e4b0001dae8a1"
+tags: ["firefox", "firefoxos", "bangla-2"]
+excerpt: "Firefox OS is discontinued in most of the platforms. This article is not that useful anymore. ফায়ারফক্স ও এস নিয়ে আমাদের আগ্রহের শেষ নাই। সবাই চাইছে কিছু না কিছু তৈরী করতে, তাই একটা"
+image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=c78316978be8f3cd0b6f12e7285248cd"
+last_modified_at: 2018-06-25 01:54:16 +0000
+redirect_from:
+  - /firefox-os-development-bangla/amp/
+render_with_liquid: false
+---
+<blockquote>
+<p>Firefox OS is discontinued in most of the platforms. This article is not that useful anymore.</p>
+</blockquote>
+<p>ফায়ারফক্স ও এস নিয়ে আমাদের আগ্রহের শেষ নাই। সবাই চাইছে কিছু না কিছু তৈরী করতে, তাই একটা টিউটোরিয়াল লিখছি, ভুল ত্রুটি মাফ করবেন।</p>
+<p>লিনাক্স ও উইন্ডোজ(7,8) অপারেটিং সিস্টেমে কাজ করে এই পদ্ধতি, আশাকরি ম্যকেও করবে</p>
+<p>যা যা লাগবে:</p>
+<ol>
+<li>git (git-scm.com)</li>
+<li>node.js (nodejs.org)</li>
+<li>একটা html/text ইডিটর (আমি আপটানা(aptana.org) অথবা নোটপ্যড প্লাস     প্লাস(<a href="http://notepad-plus-plus.org/">http://notepad-plus-plus.org/</a>) প্রিফার করি)</li>
+<li>ইন্টারনেট কানেকশন (কিছুক্ষনের জন্য)</li>
+<li>HTML5, CSS3, JS সম্পর্কে ধারনা</li>
+</ol>
+<p>প্রথমে গিট ইনস্টল করে নিন, তারপর নোড। এরপর উইন্ডোজের পাওয়ার শেল অন করেন, অথবা লিনাক্সে/ম্যকে টার্মিনাল অন করেন, আর এই কমান্ড টাইপ করেন(লিনাক্স অথবা ম্যকে রুট হিসেবে):</p>
+<p><code>npm install -g volo</code></p>
+<p>ভোলো নোড দিয়ে বানানো চমতকার একটা টুল, এটা আপনার এপ ডেভেলপমেন্ট অনেকগুনে সহজ করে দিবে।</p>
+<p>এরপর একটা যায়গা ঠিক করেন, যেখানে আপনার ফাইলগুলা রাখবেন, আমি ডেস্কটপে রাখবো, তাই আমি এই কমান্ড লিখবো,</p>
+<p><code>cd Desktop</code></p>
+<p>এখন আমি ডেস্কটপে অবস্থান করছি, এবার ভোলোর কাজ শুরু, আমরা প্রথমে এপ্লিকেশনটার একটা টেম্প্লেট থেকে কাজ শুরু করবো, সেটা ডাউনলোড করতে আমরা লিখবো,</p>
+<p><code>volo create আপনার_এপ্লিকেশনের_নাম mozilla/mortar-app-stub</code></p>
+<p>যেমন আমার ক্ষেত্রে এটা হবে,</p>
+<p><code>volo create helloworld mozilla/mortar-app-stub</code></p>
+<p>ডেস্কটপে যান, দেখবেন একটা ফোল্ডার তৈরী হয়েছে আপনার প্রজেক্টের নামে। ফোল্ডারটায় প্রবেশ করুন node_modules,tools,www এমন অনেকগুলা ফাইল ও ফোল্ডার দেখতে পারবেন।</p>
+<p>কনফিউজড লাগছে?</p>
+<p>ভয় পাবার কিছু নাই, শুধু আমরা <em>www</em> ফোল্ডার নিয়ে কাজ করবো। <em>www</em> ফোল্ডারে যান, সেখানে <strong>index.html</strong> ফাইল দেখতে পাবেন। এছাড়া css, js,img ফোল্ডার দেখতে পাবেন,<br>
+এটা আপনার ইডিটর দিয়ে ওপেন করেন, পরিচিত লাগার কথা ভিতরের সবকিছু, <code>&lt;body&gt;</code> ট্যগ শেষ হবার আগে একটা <code>&lt;script&gt;</code> আছে ঐ ট্যগ এব্ং এর ভিতরের কন্টেন্ট ছাড়া <code>&lt;body&gt;&lt;/body&gt;</code> এর মধ্যকার সবকিছু ডিলিট করে দিয়ে নিজের মত করে html মার্কআপ লিখেন‌। যেহেতু খুব বেসিক একটা এপ বানাবো, তাই আমি লিখবো,</p>
+<p><code>&lt;p&gt;Hello World&lt;/p&gt;</code></p>
+<p>এবার ফাইলটা সেভ করেন, আপনি চাইলে css ফোল্ডারে css ফাইল রাখতে পারেন, js ফোল্ডারে জাভাস্ক্রিপ্ট রাখতে পারেন আর img ফোল্ডারে ছবি :) ।</p>
+<p>মনের মাধুরি মিশিয়ে www ফোল্ডারকে মোবাইল ওয়েবসাইট মনে করেন সমস্যা নাই।</p>
+<p>এপ্লিকেশন টেস্ট করা:</p>
+<p>এখন এপ্লিকেশন টেস্ট করার পালা, আপনার কাছে নিশ্চই আপডেটেড ফায়ারফক্স ব্রাউজার আছে। এটার জন্য একটা এড অন ডাউনলোড করতে হবে আপনার যার নাম [ফায়ারফক্স ও এস সিমুলেটর(<a href="https://addons.mozilla.org/en-US/firefox/addon/firefox-os-simulator/">https://addons.mozilla.org/en-US/firefox/addon/firefox-os-simulator/</a>)</p>
+<p>পাওয়ার শেল/টার্মিনাল টা কি বন্ধ করে ফেলেছেন? করলে আবার চালু করেন, আগের মত কমান্ড দিয়ে ডেস্কটপে যান, আর তারপর cd আপনার_এপ্লিকেশনের_নাম লিখেন, আমি লিখবো,</p>
+<p><code>cd helloworld</code> (যেহেতু আমাদের এপ্লিকেশনের নাম helloworld ছিল)</p>
+<p>এখন লিখুন,</p>
+<p><code>volo serve</code></p>
+<p>পাওয়ার শেল, টার্মিনাল বন্ধ করবেন না, উইন্ডোজ হলে একটা উইন্ডো আসবে এখানে, <strong>allow access</strong> এ ক্লিক করেন।</p>
+<p>আপনার ফায়ারফক্সের মেনু থেকে <em>tools&gt;web developer&gt;firefox os simulator</em> এখানে যান, এখানে একটা যায়গায় লেখা আছে, url for page or manifest.webapp</p>
+<p>ঐখানে লিখেন,</p>
+<p><code>localhost:8008</code></p>
+<p>এবার বাম পাশে দেখেন <em>stopped</em> লেখা আছে, ঐখানে ক্লিক করেন, একটা ছোট উইন্ডোতে ফায়ারফক্স ও এস সিমুলেটর চালু হবে এবং আপনি অশ্চর্য হয়ে আবিস্কার করবেন, আপনার বানানো প্রথম  ফায়ারফক্স ও এস এপ এটাতে চলছে!</p>
+<p>আরো কাজ আছে, এবার আপনার www ফোল্ডারে manifest.webapp ফাইলটা খুলেন, নাম,ভার্শন,ভাষা, ডিসক্রিপশন বদলান, আরো কিছু ফিল্ড আছে দেখলেই বুঝবেন, সেগুলো বদলান, শুধু ফাইলটার স্ট্রাকচার ঠিক রাখবেন। ১৬,৪৮, এবং ১২৮ পিক্সেলের আইকন সরবরাহ করেন, ব্যস সব ঠিকঠাক মত হয়ে গেলে, শেলে/টার্মিনালে গিয়ে টাইপ করেন:</p>
+<p><code>volo build</code></p>
+<p>আপনার কোড পরিস্কার পরিচ্ছন্ন ও কম্প্রেস করে www-built নামে একটা ফোল্ডার তৈরী হবে। এবার শেষবারের মত এপ্লিকেশনটা টেস্ট করে নিন শেলে/টার্মিনালে লিখুন:</p>
+<p><code>volo serve base=www-built</code></p>
+<p>সিমুলেটর অন করে চেক করেন সব ঠিক আছে কিনা।</p>
+<p>কাজ শেষ</p>
+<p>আপনি অফলাইনে এপ্লিকেশন চালানোর অপশন রাখতে চাইলে টার্মিনালে লিখুন:</p>
+<p><code>volo appcache</code></p>
+<p>ব্যাস, শেষ, আপনি হোস্টেড এপ বানালে www-built ফোল্ডারটা সার্ভারে আপলোড করে দেন, আর মার্কেটপ্লেসে দিতে চাইলে, আপনার www-built ফোল্ডারের সব ফাইলগুলোকে জিপ করে সাবমিট করেন।</p>
+<p>আরো বিস্তারিত জানতে পারবেন এখানে থেকে:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/Apps/Tutorials/Weather_app_tutorial?redirectlocale=en-US&amp;redirectslug=Apps%2FTutorials%2FWeather_app_tutorial">https://developer.mozilla.org/en-US/docs/Web/Apps/Tutorials/Weather_app_tutorial?redirectlocale=en-US&amp;redirectslug=Apps%2FTutorials%2FWeather_app_tutorial</a></p>
+<p>আর ওয়েবএপ দিয়ে কি কি করা যায় সেটা এখানে পাবেন:</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/WebAPI">https://developer.mozilla.org/en-US/docs/WebAPI</a></p>
+<p>আর আমরা তো আছিই সাহায্য করার জন্য :)</p>
+

@@ -1,0 +1,38 @@
+---
+title: "Use dd for creating Bootable USB stick from any Disk image"
+date: 2013-10-13 23:59:00 +0000
+permalink: /use-dd-for-creating-bootable-usb-stick-from-any-disk-image/
+slug: "use-dd-for-creating-bootable-usb-stick-from-any-disk-image"
+ghost_id: "5b81ac0fc23e4b0001dae89d"
+tags: ["linux", "disk", "bootable", "dd", "english"]
+excerpt: "the linux command line tool `dd` can be a very useful tool for creating a bootable USB disk."
+image: "https://images.unsplash.com/photo-1477949331575-2763034b5fb5?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=f79bc18d0d05242bec62797027fecb70"
+last_modified_at: 2018-11-28 05:10:48 +0000
+redirect_from:
+  - /use-dd-for-creating-bootable-usb-stick-from-any-disk-image/amp/
+render_with_liquid: false
+---
+<p>First of all, please please please, make sure you check and double check the command before executing it.<br>
+This command is highly dangerous (be careful) and may delete all your files.<br>
+hehe, scared you right away. Don't worry, nothing will happen if you don't make a mistake, and I gues you won't because I'll explain the whole command to you. Creating a bootable media from linux has always been painful. and It is even more tough if you wish to create a bootable Windows media. But as linux is so amazing, it has some built in command to do these thing very easily. so let's start.</p>
+<p>The command we will be using is  <code>dd</code> . yes as simple as that!  what dd does is hilarious. It copies disk to disk while keeping most of the disk information including the <strong>boot record</strong>. That's the trick. We use the <em>ISO File</em> as one disk and the <em>removable media</em> as another one.</p>
+<p>we start by finding out the device file of the removable media. plug in your removable media (pendrive, flash drive) and copy all the necessary files which are in it :p</p>
+<p>removable media drives are usually mounted under the folder <code>/media</code> so if we run this command in the terminal:</p>
+<pre><code>    df | grep media
+</code></pre>
+<p>it will output the disk drives that are mounted under media. My output is this:</p>
+<pre><code>    /dev/sdc1        7800332  1816380   5983952  24% /media/anam/anam8_ubunt
+</code></pre>
+<p>I have only one devices mounted that is 7800332(~8GB) and it has a label <code>anam8_ubunt</code>. the line specifies that the device is '/dev/sdc' and the number &quot;1&quot; indicates the first partition. We don't need to think about that, we just need the <code>/dev/sdc</code> part.</p>
+<p>now navigate to the folder in terminal where you have kept the ISO file . for example, if you have kept the file in your home folder, navigate there by typing <code>cd ~</code> and now, <strong>read carefully</strong></p>
+<h2 id="importantthingaboutdd">Important thing about dd</h2>
+<p>the syntax <code>dd</code> has a wide variety of use, the simple dd command consists of two arguments, the input device file, and the output device file. so the syntax looks something like this : <code>dd if=path_to_the_source of=path_to_the_destination</code> <em>if</em> stands for input file and <em>of</em> stands for output file. and if you make mistake, you may wipe your hard disk.</p>
+<p>now, for my work, the input file would be the <strong>ISO File</strong> and the output file would be the <strong>USB Device</strong>(/dev/sdc in my case).</p>
+<p>I assume I have an ISO file named <code>ubuntu-12.10-desktop-i386.iso</code> so, my command would be :</p>
+<pre><code>    dd if=ubuntu-12.10-desktop-i386.iso of=/dev/sdc
+</code></pre>
+<p>The command will take a while and won't output anything on the terminal. Don't be disappointed. after the command has been finished, <strong>Unplug and plug in</strong> your USB device, and you'll see that the files have been copied successfully.</p>
+<h2 id="nowyoucanbootfromthismedia">Now you can boot from this media.</h2>
+<h3 id="recovery">Recovery:</h3>
+<p>Your removable media may shrink in size (8gb or bigger media may turn into 700MB). Don't get afraid. after you have finished installation from the media, use a tool like <strong>gparted</strong>  to delete the 700MB (or disk size) partition from your removable media and reformat it with its full size.</p>
+

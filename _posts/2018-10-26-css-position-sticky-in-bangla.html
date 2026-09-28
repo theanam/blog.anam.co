@@ -1,0 +1,20 @@
+---
+title: "পজিশন: স্টিকি,আমার হঠাত করে খুঁজে পাওয়া মজার একটা সি এস এস ফিচার"
+date: 2018-10-26 18:37:26 +0000
+permalink: /css-position-sticky-in-bangla/
+slug: "css-position-sticky-in-bangla"
+ghost_id: "5bd34e98d2cdca00019139cc"
+tags: ["css", "front-end", "bangla-2"]
+excerpt: "আনকমন বা ব্রাউজারে কম সাপোর্ট করে এমন ফিচারের নাম ভুলে যাই। এর আগের ব্লগ পোস্টে স্ক্রল স্ন্যাপ নিয়ে লেখার সময় এই ফিচারের রেফারেন্স খুজতে গিয়ে ভুল কীওয়ার্ড দেয়াতে নতুন একটা সি এস এস"
+image: "https://images.unsplash.com/photo-1503551723145-6c040742065b?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=5ddc8ede2d2a0a1eb9a43d0c03c6a762"
+last_modified_at: 2018-10-26 18:58:26 +0000
+redirect_from:
+  - /css-position-sticky-in-bangla/amp/
+render_with_liquid: false
+---
+<p>আনকমন বা ব্রাউজারে কম সাপোর্ট করে এমন ফিচারের নাম ভুলে যাই। এর আগের ব্লগ পোস্টে স্ক্রল স্ন্যাপ নিয়ে লেখার সময় এই ফিচারের রেফারেন্স খুজতে গিয়ে ভুল কীওয়ার্ড দেয়াতে নতুন একটা সি এস এস ফিচার খুজে পেয়ে গিয়েছিলাম। আজকে সেটা নিয়েই লিখবো।</p><p>একটা স্যাম্পল দিয়ে শুরু করি: </p><iframe height='300px' scrolling='no' title='Position Sticky Sample' src='//codepen.io/theanam/embed/MPLBYy/?height=265&theme-id=0&default-tab=css,result' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/theanam/pen/MPLBYy/'>Position Sticky Sample</a> by Anam Ahmed (<a href='https://codepen.io/theanam'>@theanam</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe><p>স্যাম্পলটাতে স্ক্রল করলে খেয়াল করবেন, প্রথমে স্টিকি লেখা এলিমেন্ট নরমালি স্ক্রল হয়, তারপর হঠাত করে যেই একটা নির্দিষ্ট যায়গায় পৌছে যায়, তখন আর স্ক্রল করেনা <code>position:fixed</code> এলিমেন্টের মত চুপচাপ ঐখানেই বসে থাকে। </p><p>যেকোন এলিমেন্টকে পজিশন স্টিকিতে পরিনত করতে দুইটা প্রোপার্টি দরকার, একটা <code>position:sticky</code> আর একটা কোন পজিশনে গেলে স্টিকি হয়ে যাবে সেটা। এইটা পুরান পজিশনিং সি এস এস দিয়েই ( <code>top</code>, <code>right</code>, <code>bottom</code> <code>left</code> এইগুলো ) করা যায়। আমার স্যাম্পলে আমি চাচ্ছিলাম এলিমেন্ট <code>top:10px</code> এ আটকে যাক। তাই আমার সি এস এস ছিলো:</p><pre><code>.sticky{
+    position:sticky;
+    top:10px;
+}</code></pre>
+<p>এর মানে আমি যখন স্ক্রল করতে করতে আমার ভিউপোর্টের উপরের আংশের সাথে আমার এলিমে ন্টের টপ পজিশনের দুরত্ব ১০ পিক্সেল অথবা এর কম থাকবে, এলিমেন্ট <code>position:fixed</code> এর মত হয়ে যাবে। </p><p>স্ক্রল করতে গিয়েই খেয়াল করবেন যখন আমার স্টিকি এলিমেন্ট(লাল রংয়ের) উপরের ধারের একেবারে কাছে চলে আসে (১০ পিক্সেল বা তার কম) তখনই আটকে যায়। এইরকম চাইলে যত ইচ্ছা তত এলিমেন্টে স্টিকি পজিশনিং ব্যবহার করা যায়। </p><p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position#Sticky_positioning">ফিচারটির রেফারেন্স ডকুমেন্ট পাবেন এই লিংকে</a></p><h4 id="-">ব্রাউজার সাপোর্ট:</h4><p>ব্রাউজার সাপোর্ট মাশাআল্লাহ ভালো। অপেরা মিনি আর কিছু অচেনা চাইনিজ ব্রাউজার বাদ দিলে সব ব্রাউজারে মোটামুটি কম বেশী সাপোর্ট করে এই ফিচার। </p><p><a href="https://caniuse.com/#search=sticky">পুরো ব্রাউজার কম্প্যাটিবিলিটি টেবিল পাবেন এই লিংক‌ে</a></p><blockquote>সি এস এস দিয়ে এখন অনেক কিছুই করা যায় যেগুলো করতে আগে আলাদা জাভাস্ক্রিপ্ট লাইব্রেরী দরকার হতো। ব্যাপারটা বেশ মজার।</blockquote>

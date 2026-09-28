@@ -1,0 +1,38 @@
+---
+title: "Easy WordPress Development with Docker"
+date: 2018-10-17 22:24:06 +0000
+permalink: /easy-wordpress-development-with-docker/
+slug: "easy-wordpress-development-with-docker"
+ghost_id: "5bc7a88395d30a0001a25d42"
+tags: ["docker", "wordpress", "devops", "english"]
+excerpt: "I have mixed feelings about WordPress. Half of the people I know absolutely hate WordPress while other half loves it. I think WordPress is cool. It's a great tool if you can use"
+image: "https://images.unsplash.com/photo-1533040038109-9b1fb74bb5d3?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=dfad5991817b4c10f953ca2ec16cca49"
+last_modified_at: 2018-11-28 05:04:45 +0000
+redirect_from:
+  - /easy-wordpress-development-with-docker/amp/
+render_with_liquid: false
+---
+<p>I have mixed feelings about WordPress. Half of the people I know absolutely hate WordPress while other half loves it. I think WordPress is cool. It's a great tool if you can use it properly. </p><p>I used to work with WordPress on a regular basis. Half of my CMS works were based on WordPress. Part of the reason was the fact that WordPress was very easy to start with. Download any <code>*MP</code> Stack and enjoy the comfort of WordPress working out of the box. But there were a few problems. Like moving around comfortably with the development environment. The computers I used, often failed so I had to take a lot of time setting up things right where they were before I could star developing again. And then there was Deployment. I remember moving around with <code>XAMPP</code> Portable version in my <code>128 Megabyte</code>  pen drive back then. It's been long since. I remember last using WordPress a couple of years ago.</p><p>Recently I wanted to try WordPress again for <a href="https://wordpress.org/gutenberg/">Gutenberg</a>. It's probably the greatest thing that happened to WordPress recently. And As I try to contain literally everything inside Docker. I started there. </p><blockquote><strong>Disclaimer:</strong> My setup might not be what experts in WordPress Field does. Mine just works for me and can be a good starting point for anyone interested. If you want to go full production with this, you might do some research around best practices.</blockquote><p>If you are planning to Follow along, you need to have two things installed in your system: </p><ol><li><a href="https://www.docker.com/get-started">Docker </a></li><li><a href="https://docs.docker.com/compose/">Docker Compose</a></li></ol><p>Luckily, There's an <a href="https://hub.docker.com/_/wordpress/">official WordPress Docker image in Docker Hub</a>. I planned to build my setup on top of that. So I started by writing a <code>docker-compose.yml</code> file, because I need a database server to go along with it. Here's how my Compose file looked like:</p><pre><code>version: &quot;3&quot;
+
+services:
+  wordpress-app:
+    image: wordpress:4.9.8-php7.0-apache
+    volumes:
+      - ./html:/var/www/html
+    environment:
+      - WORDPRESS_DB_HOST=wordpress-database
+      - WORDPRESS_DB_PASSWORD=supersecret
+    ports:
+      - 8800:80
+    depends_on: 
+      - wordpress-database
+  wordpress-database:
+    image: mysql:5.7
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=supersecret
+      - MYSQL_DATABASE=wordpress</code></pre>
+<p>Once my compose file was ready, I created two folders on the same directiry, <code>data</code> for mysql to persist data. and <code>html</code> for WordPress Files.</p><p>Once that was done, I ran the following command in the directory and waited for a couple of minutes.</p><pre><code>docker-compose up -d</code></pre>
+<p>Once the command was done, doing it's stuff, I went to the browser and navigated to <code>localhost:8800</code> (The port I set on <code>docker-compose.yml</code> file) and was greeted with the WordPress Installer. As I already set all the database information,I only had to give the site related information (Site name, username, password, email etc.)</p><figure class="kg-image-card"><img src="/content/images/2018/10/Screen-Shot-2018-10-18-at-4.06.51-AM.png" class="kg-image"></figure><p>And my WordPress environment was ready. I logged in and Installed Gutenberg immediately 😃</p><p>All the WordPress files can be found in the <code>html</code> folder we created Earlier. If you work in a team or plan to move around with the database changes as well, You need to move with the <code>data</code> directory too.</p><p>You can immediately start working anywhere in the world within a few minutes now. If the System has docker and docker-compose installed and you have this app directory with you (Or in Git/Any other version control/Cloud). You just need to run one command, wait a few minutes. And you can start right where you left off :)</p><p>The command is: </p><pre><code>docker-compose up -d</code></pre>
+<blockquote>I would Suggest learning a bit more about docker before doing this, that would improve your understanding and help you debug. If you understand Bangla: <a href="https://blog.anam.co/docker-in-bangla/">Here's an article I wrote on Docker</a>.</blockquote>

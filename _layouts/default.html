@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang }}">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if page.title %}{{ page.title | escape }}{% elsif paginator.page > 1 %}{{ site.title | escape }} (Page {{ paginator.page }}){% else %}{{ site.title | escape }}{% endif %}</title>
+    <link rel="shortcut icon" href="{{ site.favicon | relative_url }}" type="image/png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" />
+    <link rel="stylesheet" type="text/css" href="{{ '/assets/built/screen.css' | relative_url }}" />
+    <link rel="stylesheet" type="text/css" href="{{ '/assets/custom.css' | relative_url }}" />
+    {% feed_meta %}
+    {% seo title=false %}
+</head>
+<body class="{% if paginator.page > 1 %}paged archive-template{% elsif page.class %}{{ page.class }}{% if page.class == 'post-template' %}{% for t in page.tags %} tag-{{ t }}{% endfor %}{% endif %}{% else %}home-template{% endif %}">
+    <div class="site-wrapper">
+        {{ content }}
+
+        {% if page.current == 'home' %}
+            {% include pagination.html base="/" page=paginator.page total=paginator.total_pages %}
+        {% endif %}
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="{{ '/' | relative_url }}">{{ site.title }}</a> &copy; {{ site.time | date: '%Y' }}</section>
+                <nav class="site-footer-nav">
+                    <a href="{{ '/' | relative_url }}">Latest Posts</a>
+                    {% if site.facebook %}<a href="https://facebook.com/{{ site.facebook }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                    {% if site.twitter.username %}<a href="https://twitter.com/{{ site.twitter.username }}" target="_blank" rel="noopener">Twitter</a>{% endif %}
+                    <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+                </nav>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="{{ '/assets/js/jquery.fitvids.js' | relative_url }}"></script>
+    {% if page.class == "post-template" %}{% include post-scripts.html %}{% endif %}
+</body>
+</html>

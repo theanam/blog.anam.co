@@ -1,0 +1,45 @@
+---
+title: "Fix Google Webfont problem in firefox (Old)"
+date: 2014-02-04 00:07:00 +0000
+permalink: /fix-google-webfont-problem-in-firefox-old/
+slug: "fix-google-webfont-problem-in-firefox-old"
+ghost_id: "5b81ac0fc23e4b0001dae8a0"
+tags: ["firefox", "webfont", "english"]
+excerpt: "Firefox fixed this bug, this method is not required any more. You probably have noticed that Google Webfont doesn't seem to work with the latest version of Firefox. Feeling worried? well there's a"
+image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ&s=fc38317189602f38442f15d187418566"
+last_modified_at: 2018-11-28 05:10:25 +0000
+redirect_from:
+  - /fix-google-webfont-problem-in-firefox-old/amp/
+render_with_liquid: false
+---
+<blockquote>
+<p>Firefox fixed this bug, this method is not required any more.</p>
+</blockquote>
+<p>You probably have noticed that <a href="http://www.google.com/webfonts">Google Webfont</a> doesn't seem to work with the latest version of Firefox. Feeling worried? well there's a solution :), let's take a closer look at the problem first:</p>
+<p><img src="http://blog.anam.co/sites/all/files/ani.png" alt="screenshot" title="Aniruddha"></p>
+<p>The above image explains it all, firefox Doesn't download fonts from a remote server, so, it doesn't download the google <strong>Woff</strong> font too.</p>
+<p>Well, this problem can be solved by configuring your web server.</p>
+<p>If you are using <a href="http://apache.org">Apache webserver</a>, add these code in you <code>.htaccess</code> file :</p>
+<pre><code>&lt;FilesMatch &quot;\.(ttf|otf|woff)$&quot;&gt;
+&lt;IfModule mod_headers.c&gt;
+Header set Access-Control-Allow-Origin &quot;*&quot;
+&lt;/IfModule&gt;
+&lt;/FilesMatch&gt;
+</code></pre>
+<p>And if you are using <a href="http://nginx.org">nginx</a> then add these lines in your nginx configuration:</p>
+<pre><code># Cross domain webfont access
+location ~* \.(?:ttf|ttc|otf|eot|woff|font.css)$ {
+add_header &quot;Access-Control-Allow-Origin&quot; &quot;*&quot;;
+expires 1M;
+access_log off;
+add_header Cache-Control &quot;public&quot;;
+}
+</code></pre>
+<p>This should solve your problem.</p>
+<h2 id="source">Source :</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face?redirectlocale=en-US&amp;redirectslug=CSS%2F%40font-face">MDN article on @font-face</a></li>
+<li><a href="http://stackoverflow.com/questions/15080434/how-to-display-font-awesome-icons-in-firefox">This StackOverflow Answer</a></li>
+</ul>
+<p>Feel free to add comment :)</p>
+
