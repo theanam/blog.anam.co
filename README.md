@@ -5,8 +5,28 @@ Migrated from Ghost 2.28 on 2026-09-28. Every URL the Ghost site served still re
 ## Run locally
 
     bundle install
+    npm install                         # image optimiser; also turns on the pre-commit hook
     bundle exec jekyll serve            # http://localhost:4000
     bundle exec jekyll serve --drafts   # include _drafts/
+
+## Images
+
+Images are shrunk automatically so pages stay fast. `scripts/optimize-images.mjs` (using sharp):
+
+- scales anything wider than 2000px down to 2000px,
+- re-encodes JPEG (mozjpeg, quality 80), PNG (palette, quality 90) and WebP (quality 80),
+- applies EXIF rotation and strips metadata, including camera and GPS details,
+- only rewrites a file if it gets at least 5% smaller, so optimised images are never recompressed.
+
+It runs in two places:
+
+1. **Pre-commit hook** (`.githooks/pre-commit`): new or changed images are optimised in place and
+   re-staged before each commit. `npm install` switches the hook on (`core.hooksPath`), so do that
+   once after every clone. HEIC files are refused; export them as JPEG.
+2. **Deploy workflow**: `npm run optimize-images -- --all` runs before `jekyll build`, so the live site
+   is optimised even if a commit skipped the hook (`--no-verify`, or a machine without `npm install`).
+
+To check what it would do: `npm run optimize-images -- --all --check`.
 
 ## Deploy
 

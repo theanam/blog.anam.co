@@ -1,0 +1,16 @@
+{
+  "name": "anams-blog-tools",
+  "private": true,
+  "description": "Image optimisation for the blog. Run `npm install` after cloning; it also enables the git pre-commit hook.",
+  "type": "module",
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
+    "optimize-images": "node scripts/optimize-images.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
+  }
+}

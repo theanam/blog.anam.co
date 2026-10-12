@@ -58,3 +58,29 @@ body, .post-full-content h1, .post-full-content h2, .post-full-content h3,
     .pagination a { padding: 10px 14px; font-size: 1.2rem; }
     .pagination .page-number { font-size: 1.2rem; }
 }
+
+/* Taglines under the home page logo: one line in a thin-bordered chip. */
+.site-taglines {
+    z-index: 10;
+    display: inline-block;
+    margin: 16px 0 0;
+    padding: 6px 16px;
+    /* border: 1px solid rgba(255, 255, 255, 0.3); */
+    /* border-radius: 16px; */
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.4px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+}
+.site-taglines-dot { margin: 0 8px; opacity: 0.6; }
+@media (max-width: 500px) {
+    .site-taglines {
+         padding: 5px 12px; font-size: 1rem; 
+
+        >*{
+            display:block;
+        }
+        }
+    
+}

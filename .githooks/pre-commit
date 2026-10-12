@@ -1,0 +1,19 @@
+#!/bin/sh
+# Shrinks newly added or changed images before they're committed.
+# Enabled by `npm install` (package.json "prepare" sets core.hooksPath to .githooks).
+# Skip it once with `git commit --no-verify`; the deploy workflow optimises images again anyway.
+
+images=$(git diff --cached --name-only --diff-filter=AM -z \
+  | tr '\0' '\n' | grep -iE '\.(jpe?g|png|webp|heic)$')
+[ -z "$images" ] && exit 0
+
+if [ ! -d node_modules/sharp ]; then
+  echo "pre-commit: images are staged but the optimiser isn't installed." >&2
+  echo "            Run 'npm install', then commit again." >&2
+  exit 1
+fi
+
+# File names may contain spaces; feed them to node one per line.
+echo "$images" | tr '\n' '\0' | xargs -0 node scripts/optimize-images.mjs || exit 1
+# Re-stage the optimised versions.
+echo "$images" | tr '\n' '\0' | xargs -0 git add --

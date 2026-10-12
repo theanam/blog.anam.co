@@ -310,5 +310,25 @@
   "mecca": {
     "name": "mecca",
     "description": null
+  },
+  "ai": {
+    "name": "AI",
+    "description": null
+  },
+  "llm": {
+    "name": "LLM",
+    "description": null
+  },
+  "photography": {
+    "name": "photography",
+    "description": null
+  },
+  "3d-modelling": {
+    "name": "3D modelling",
+    "description": null
+  },
+  "3d-printing": {
+    "name": "3D printing",
+    "description": null
   }
 }

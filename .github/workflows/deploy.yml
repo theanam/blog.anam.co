@@ -29,6 +29,19 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true   # runs bundle install and caches gems
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install image optimiser
+        run: npm ci
+
+      # Safety net for commits that skipped the pre-commit hook. Already optimised images are
+      # left alone, so this only changes files that would otherwise ship oversized.
+      - name: Optimise images
+        run: npm run optimize-images -- --all
+
       - uses: actions/configure-pages@v5
 
       - name: Build

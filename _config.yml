@@ -1,5 +1,9 @@
 title: "Anam's Blog"
 description: "Useless/Useful thoughts and ideas"
+# Shown under the logo on the home page, in one chip separated by dots. (description above is only used for SEO/feed metadata.)
+taglines:
+  - "Written by a real human."
+  - "Opinions are my own."
 url: "https://anam.co"
 baseurl: "/"  # jasper2 templates expect a trailing slash
 lang: en
@@ -27,6 +31,7 @@ social:
 navigation:
   - { label: "Home", url: "/" }
   - { label: "Linux", url: "/tag/linux/" }
+  - { label: "AI", url: "/tag/ai/" }
   - { label: "Containers", url: "/tag/docker/" }
   - { label: "বাংলা", url: "/tag/bangla-2/" }
   - { label: "My Github", url: "https://github.com/theanam/" }
@@ -64,4 +69,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
+  - node_modules/
+  - package.json
+  - package-lock.json
   - LICENSE-jasper2

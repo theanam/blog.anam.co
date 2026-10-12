@@ -7,7 +7,9 @@ class: home-template
     <div class="inner">
         <div class="site-header-content">
             <h1 class="site-title"><img class="site-logo" src="{{ site.logo | relative_url }}" alt="{{ site.title }}" /></h1>
-            <h2 class="site-description">{{ site.description }}</h2>
+            {% if site.taglines %}
+            <p class="site-taglines">{{ site.taglines | join: '<span class="site-taglines-dot">·</span>' }}</p>
+            {% endif %}
         </div>
         {% include site-nav.html %}
     </div>

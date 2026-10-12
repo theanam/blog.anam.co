@@ -5,3 +5,5 @@ vendor/
 .bundle/
 # Ghost exports contain password hashes, private keys and subscriber emails.
 *.ghost.*.json
+node_modules/
+.DS_Store
