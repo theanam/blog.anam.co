@@ -2,7 +2,7 @@
 title: Reclaim your hardware ownership with AI
 date: 2026-10-31
 image: /content/images/2026/hw_reclaim.jpeg
-excerpt: Do you really own your hardware? Sometimes it feels like you don't. That can change with AI.
+excerpt: Do you really own the hardware you bought? Sometimes it feels like you don't. That can change with the help of AI.
 tags: ["english","ai"]
 ---
 
